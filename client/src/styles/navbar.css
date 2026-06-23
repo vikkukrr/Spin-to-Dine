@@ -1,9 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 :root {
   --primary: #4A7C59;
   --primary-dark: #3A6347;
@@ -40,28 +34,20 @@ body {
   padding-top: 64px;
 }
 
-/* ====== NAVBAR ====== */
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: #1a3a1a;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   z-index: 1000;
   height: 64px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-body.dark-mode .navbar {
-  background: rgba(30, 42, 30, 0.85);
-  border-bottom-color: rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
 .navbar-container {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 0 20px;
   height: 100%;
@@ -77,19 +63,15 @@ body.dark-mode .navbar {
   text-decoration: none;
   font-weight: 700;
   font-size: 1.25rem;
-  color: var(--text-primary);
+  color: #ffffff;
 }
 
 .logo-text {
-  background: var(--gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ffffff;
 }
 
 .logo-icon {
   font-size: 1.5rem;
-  -webkit-text-fill-color: initial;
 }
 
 .navbar-links {
@@ -100,7 +82,7 @@ body.dark-mode .navbar {
 
 .nav-link {
   text-decoration: none;
-  color: var(--text-secondary);
+  color: rgba(255,255,255,0.85);
   font-weight: 500;
   font-size: 0.875rem;
   transition: color 0.2s;
@@ -108,12 +90,16 @@ body.dark-mode .navbar {
 }
 
 .nav-link:hover {
-  color: var(--primary);
+  color: #ffffff;
 }
 
 .spin-link {
-  color: var(--primary);
+  color: #FF6B35;
   font-weight: 600;
+}
+
+.spin-link:hover {
+  color: #ff8555;
 }
 
 .navbar-actions {
@@ -132,7 +118,7 @@ body.dark-mode .navbar {
   position: absolute;
   top: -6px;
   right: -8px;
-  background: var(--primary);
+  background: #FF6B35;
   color: white;
   font-size: 0.6rem;
   width: 18px;
@@ -147,14 +133,14 @@ body.dark-mode .navbar {
 .user-name {
   font-weight: 500;
   font-size: 0.875rem;
-  color: var(--text-primary);
+  color: rgba(255,255,255,0.9);
 }
 
 .logout-btn {
   padding: 6px 16px;
-  border: none;
-  background: #E8E6E1;
-  color: var(--text-primary);
+  border: 1px solid rgba(255,255,255,0.2);
+  background: transparent;
+  color: rgba(255,255,255,0.85);
   border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
@@ -164,23 +150,24 @@ body.dark-mode .navbar {
 }
 
 .logout-btn:hover {
-  background: #DDDAD2;
+  background: rgba(255,255,255,0.1);
+  color: #ffffff;
 }
 
 .mobile-menu-btn {
   background: none;
   border: none;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   cursor: pointer;
   padding: 4px;
-  color: var(--text-primary);
+  color: #ffffff;
   display: none;
 }
 
 .theme-toggle {
-  background: #E8E6E1;
-  border: none;
-  font-size: 1.1rem;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  font-size: 1rem;
   cursor: pointer;
   width: 36px;
   height: 36px;
@@ -192,22 +179,21 @@ body.dark-mode .navbar {
 }
 
 .theme-toggle:hover {
-  background: #DDDAD2;
+  background: rgba(255,255,255,0.2);
 }
 
 .admin-link {
-  color: var(--primary);
+  color: #FF6B35;
   font-weight: 600;
 }
 
-/* ====== BUTTONS ====== */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   padding: 10px 24px;
-  background: var(--gradient);
+  background: #FF6B35;
   color: white;
   border: none;
   border-radius: 10px;
@@ -217,12 +203,12 @@ body.dark-mode .navbar {
   font-family: inherit;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(74, 124, 89, 0.25);
+  box-shadow: 0 4px 12px rgba(255,107,53,0.25);
 }
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(74, 124, 89, 0.35);
+  box-shadow: 0 6px 20px rgba(255,107,53,0.35);
 }
 
 .btn-primary:disabled {
@@ -260,7 +246,6 @@ body.dark-mode .navbar {
   width: 100%;
 }
 
-/* ====== FORM ELEMENTS ====== */
 .form-group {
   margin-bottom: 20px;
 }
@@ -295,6 +280,21 @@ body.dark-mode .navbar {
   color: var(--text-muted);
 }
 
+body.dark-mode .form-input {
+  background: #1a3a1a;
+  color: #ffffff;
+  border-color: rgba(255,255,255,0.2);
+}
+
+body.dark-mode .form-input:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 4px rgba(76,175,80,0.12);
+}
+
+body.dark-mode .form-input::placeholder {
+  color: rgba(255,255,255,0.4);
+}
+
 .error-message {
   background: #FEF2F2;
   color: #DC2626;
@@ -312,40 +312,78 @@ body.dark-mode .navbar {
   font-size: 0.9rem;
 }
 
-/* ====== MOBILE NAV ====== */
-@media (max-width: 768px) {
+.mobile-menu-overlay {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .mobile-menu-btn {
+    display: block;
+  }
+
   .navbar-links {
-    display: none;
-    flex-direction: column;
-    width: 100%;
-    position: absolute;
+    position: fixed;
     top: 64px;
     left: 0;
-    background: var(--white);
+    right: 0;
+    background: #1a3a1a;
+    flex-direction: column;
     padding: 16px 20px;
-    box-shadow: var(--shadow-lg);
     gap: 12px;
+    display: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .navbar-links.mobile-open {
+    display: flex;
   }
 
   .navbar-actions {
-    display: none;
-    flex-direction: column;
-    width: 100%;
-    position: absolute;
-    top: 300px;
-    left: 0;
-    background: var(--white);
-    padding: 16px 20px;
-    box-shadow: var(--shadow-lg);
-    gap: 10px;
+    display: flex;
   }
 
-  .navbar-links.mobile-open,
   .navbar-actions.mobile-open {
     display: flex;
   }
 
+  .nav-link {
+    font-size: 0.95rem;
+    padding: 8px 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .navbar-container {
+    padding: 0 12px;
+  }
+
+  .navbar-actions .nav-link:not(.cart-link),
+  .navbar-actions .user-name {
+    display: none;
+  }
+
+  .navbar-links {
+    top: 64px;
+    padding: 12px 16px;
+  }
+
+  .navbar-links .nav-link {
+    font-size: 0.9rem;
+    padding: 6px 0;
+  }
+}
+
+@media (min-width: 1024px) {
   .mobile-menu-btn {
-    display: block;
+    display: none;
+  }
+
+  .navbar-links {
+    display: flex;
+  }
+
+  .navbar-actions {
+    display: flex;
   }
 }

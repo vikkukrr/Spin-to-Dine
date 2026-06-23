@@ -28,6 +28,7 @@ const Leaderboard = lazy(() => import('./pages/Leaderboard'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const Favorites = lazy(() => import('./pages/Favorites'));
+const RecipeMaker = lazy(() => import('./pages/RecipeMaker'));
 
 function App() {
   return (

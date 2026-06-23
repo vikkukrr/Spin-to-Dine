@@ -20,6 +20,12 @@ export const spinService = {
   getSpinHistory: async (userId) => {
     const response = await api.get(`/spin/history/${userId}`);
     return response.data;
+  },
+
+  // Mark a spin log as accepted
+  acceptSpinLog: async (logId) => {
+    const response = await api.patch(`/spin/log/${logId}/accept`);
+    return response.data;
   }
 };
 

@@ -21,61 +21,27 @@ const userSchema = new mongoose.Schema({
     minlength: [6, 'Password must be at least 6 characters'],
     select: false
   },
-  address: {
-    type: String,
-    default: ''
-  },
-  budgetRange: {
-    type: String,
-    enum: ['low', 'medium', 'high'],
-    default: 'medium'
-  },
-  location: {
-    type: String,
-    default: 'default'
-  },
-  isAdmin: {
-    type: Boolean,
-    default: false
-  },
-  loyaltyPoints: {
-    type: Number,
-    default: 0
-  },
-  totalSpins: {
-    type: Number,
-    default: 0
-  },
-  currentStreak: {
-    type: Number,
-    default: 0
-  },
-  lastSpinDate: {
-    type: Date,
-    default: null
-  },
-  badges: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Badge'
-  }],
-  orderHistory: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Order'
-  }],
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
+  address: { type: String, default: '' },
+  budgetRange: { type: String, enum: ['low', 'medium', 'high'], default: 'medium' },
+  location: { type: String, default: 'default' },
+  isAdmin: { type: Boolean, default: false },
+  loyaltyPoints: { type: Number, default: 0 },
+  totalSpins: { type: Number, default: 0 },
+  currentStreak: { type: Number, default: 0 },
+  lastSpinDate: { type: Date, default: null },
+  badges: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Badge' }],
+  orderHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
+  savedRecipes: [{ type: mongoose.Schema.Types.Mixed }],
+  createdAt: { type: Date, default: Date.now },
   resetPasswordToken: String,
   resetPasswordExpire: Date
 });
 
 userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) {
-    next();
-  }
+  if (!this.isModified('password')) return next();
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
+  next();
 });
 
 userSchema.methods.matchPassword = async function(enteredPassword) {

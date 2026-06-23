@@ -46,9 +46,9 @@ const SpinHistory = () => {
       <h1>Spin History</h1>
       {history.length === 0 ? (
         <div className="empty-state">
-          <h2>No spins yet</h2>
-          <p>Start spinning the wheel to see your history!</p>
-          <button onClick={() => navigate('/spin')} className="btn-primary">Go Spin!</button>
+          <h2>No spins yet! 🎰</h2>
+          <p>Start spinning to discover amazing food</p>
+          <button onClick={() => navigate('/spin')} className="btn-primary">Spin Now</button>
         </div>
       ) : (
         <div className="history-list">
@@ -63,7 +63,12 @@ const SpinHistory = () => {
               <div className="history-body">
                 {entry.suggestedDish && (
                   <>
-                    <img src={entry.suggestedDish.imageUrl} alt={entry.suggestedDish.name} className="history-dish-img" />
+                    <img
+                      src={entry.suggestedDish.imageUrl || 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=120&h=120&fit=crop'}
+                      alt={entry.suggestedDish.name}
+                      className="history-dish-img"
+                      onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=120&h=120&fit=crop'; }}
+                    />
                     <div className="history-dish-info">
                       <h3>{entry.suggestedDish.name}</h3>
                       <p className="history-price">₹{entry.suggestedDish.price}</p>

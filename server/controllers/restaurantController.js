@@ -1,12 +1,6 @@
-// server/controllers/restaurantController.js
-// Restaurant controller for handling restaurant and menu operations
-
 const Restaurant = require('../models/Restaurant');
 const Menu = require('../models/Menu');
 
-// @desc    Get all restaurants
-// @route   GET /api/restaurants
-// @access  Public
 const getRestaurants = async (req, res) => {
   try {
     const { location, rating, price, veg, search, sortBy, page = 1, limit = 12 } = req.query;
@@ -52,9 +46,6 @@ const getRestaurants = async (req, res) => {
   }
 };
 
-// @desc    Get single restaurant
-// @route   GET /api/restaurants/:id
-// @access  Public
 const getRestaurantById = async (req, res) => {
   try {
     const restaurant = await Restaurant.findById(req.params.id);
@@ -69,25 +60,17 @@ const getRestaurantById = async (req, res) => {
   }
 };
 
-// @desc    Get restaurant menu
-// @route   GET /api/restaurants/:id/menu
-// @access  Public
 const getRestaurantMenu = async (req, res) => {
   try {
-    // Look for all menu items that belong to this restaurant's ID
     const menu = await Menu.find({ restaurantId: req.params.id });
 
-    // It's okay if a menu is empty, but we'll return an empty array []
-    // so the frontend doesn't crash.
-    res.json(menu || []); 
+    res.json(menu || []);
   } catch (error) {
     console.error("Menu Fetch Error:", error.message);
     res.status(500).json({ message: "Error fetching menu items" });
   }
 };
-// @desc    Get all menu items
-// @route   GET /api/restaurants/menu/all
-// @access  Public
+
 const getAllMenuItems = async (req, res) => {
   try {
     const { category, veg, minPrice, maxPrice, search } = req.query;
@@ -122,9 +105,6 @@ const getAllMenuItems = async (req, res) => {
   }
 };
 
-// @desc    Get popular dishes across all restaurants
-// @route   GET /api/restaurants/popular-dishes
-// @access  Public
 const getPopularDishes = async (req, res) => {
   try {
     const dishes = await Menu.find({ available: true })

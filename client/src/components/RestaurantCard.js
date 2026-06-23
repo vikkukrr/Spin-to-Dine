@@ -22,10 +22,11 @@ const RestaurantCard = ({ restaurant }) => {
       <div className="restaurant-card-image">
         {!imgLoaded && <div className="card-image-placeholder" />}
         <img
-          src={imageUrl || 'https://via.placeholder.com/400x240?text=Restaurant'}
+          src={imageUrl || ''}
           alt={name}
           className={`card-image ${imgLoaded ? 'loaded' : ''}`}
           onLoad={() => setImgLoaded(true)}
+          onError={(e) => { e.target.style.display = 'none'; setImgLoaded(true); }}
         />
         <div className="card-image-overlay">
           {vegOnly && <span className="card-veg-badge">Pure Veg</span>}

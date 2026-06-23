@@ -9,5 +9,8 @@
     "dev:server": "cd server && npx nodemon server.js",
     "build:client": "cd client && npm run build",
     "seed": "cd server && node seed.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.0"
   }
 }

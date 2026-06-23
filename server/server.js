@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const connectDB = require('./config/db');
+const { connectDB } = require('./config/db');
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
@@ -14,13 +14,16 @@ const leaderboardRoutes = require('./routes/leaderboardRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const favoriteRoutes = require('./routes/favoriteRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const recipeRoutes = require('./routes/recipeRoutes');
 const socialRoutes = require('./routes/socialRoutes');
 
 const errorMiddleware = require('./middleware/errorMiddleware');
 
 const app = express();
 
-connectDB();
+connectDB().then(() => {
+  console.log('Database connected, ready to handle requests');
+});
 
 app.use(cors());
 app.use(express.json());
@@ -34,6 +37,7 @@ app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/favorites', favoriteRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/recipes', recipeRoutes);
 app.use('/api/social', socialRoutes);
 
 app.get('/api/health', (req, res) => {

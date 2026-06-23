@@ -31,7 +31,6 @@ const getSuggestions = async (req, res) => {
 
     const suggestions = await generateSmartSuggestions(userId);
 
-    // Get user's streak info for display
     const user = await User.findById(userId);
 
     res.json({
@@ -95,7 +94,6 @@ const logSpin = async (req, res) => {
       todayStart.setHours(0, 0, 0, 0);
 
       if (lastSpinDay.getTime() === todayStart.getTime()) {
-        // Already spun today, no streak change
       } else if (lastSpinDay.getTime() === yesterday.getTime()) {
         user.currentStreak += 1;
         if (user.currentStreak >= 3) {
@@ -146,6 +144,28 @@ const getSpinHistory = async (req, res) => {
   }
 };
 
+const acceptSpinLog = async (req, res) => {
+  try {
+    const { logId } = req.params;
+
+    const log = await GamificationLog.findById(logId);
+    if (!log) {
+      return res.status(404).json({ message: 'Spin log not found' });
+    }
+
+    if (log.userId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+
+    log.accepted = true;
+    await log.save();
+
+    res.json({ message: 'Spin accepted', log });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const getTimeSlot = () => {
   const hour = new Date().getHours();
   if (hour >= 6 && hour < 11) return 'breakfast';
@@ -155,5 +175,5 @@ const getTimeSlot = () => {
 };
 
 module.exports = {
-  getSuggestions, logSpin, getSpinHistory
+  getSuggestions, logSpin, getSpinHistory, acceptSpinLog
 };

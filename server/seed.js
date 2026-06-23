@@ -1,11 +1,9 @@
-// server/seed.js
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs'); // Make sure this is installed!
+const bcrypt = require('bcryptjs');
 
-// Import models
 const Restaurant = require('./models/Restaurant');
 const Menu = require('./models/Menu');
 const User = require('./models/User');
@@ -146,10 +144,22 @@ const restaurants = [
     vegOnly: false,
     isOpen: true,
     imageUrl: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400'
+  },
+  {
+    name: 'Dragon Wok',
+    location: 'Eastside',
+    rating: 4.3,
+    ratingCount: 160,
+    cuisines: ['Chinese', 'Thai', 'Noodles'],
+    deliveryTime: '25-35 min',
+    deliveryFee: 35,
+    minOrder: 200,
+    vegOnly: false,
+    isOpen: true,
+    imageUrl: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=250&fit=crop'
   }
 ];
 const menuItems = [
-  // Biryani House Menu
   {
     name: 'Chicken Dum Biryani',
     description: 'Aromatic basmati rice cooked with spicy chicken and traditional spices',
@@ -200,7 +210,6 @@ const menuItems = [
     popularity: 70,
     imageUrl: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400'
   },
-  // Green Leaf Kitchen Menu
   {
     name: 'Masala Dosa',
     description: 'Crispy rice crepe with potato filling',
@@ -251,7 +260,6 @@ const menuItems = [
     popularity: 80,
     imageUrl: 'https://images.pexels.com/photos/96974/pexels-photo-96974.jpeg?w=400'
   },
-  // Pizza Paradise Menu
   {
     name: 'Margherita Pizza',
     description: 'Classic tomato and mozzarella pizza',
@@ -302,7 +310,6 @@ const menuItems = [
     popularity: 200,
     imageUrl: 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=400'
   },
-  // Spice Garden Menu
   {
     name: 'Chicken Fried Rice',
     description: 'Wok-tossed rice with chicken and vegetables',
@@ -343,7 +350,6 @@ const menuItems = [
     popularity: 160,
     imageUrl: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400'
   },
-  // Southern Spice Menu
   {
     name: 'Chicken Chettinad',
     description: 'Spicy chicken curry with Chettinad spices',
@@ -384,7 +390,6 @@ const menuItems = [
     popularity: 140,
     imageUrl: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400'
   },
-  // Burger Barn Menu
   {
     name: 'Classic Cheese Burger',
     description: 'Beef patty with cheese and veggies',
@@ -434,6 +439,56 @@ const menuItems = [
     restaurantIndex: 5,
     popularity: 100,
     imageUrl: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400'
+  },
+  {
+    name: 'Kung Pao Chicken',
+    description: 'Spicy stir-fried chicken with peanuts and vegetables',
+    price: 280,
+    category: 'lunch',
+    veg: false,
+    restaurantIndex: 6,
+    popularity: 170,
+    imageUrl: 'https://images.unsplash.com/photo-1525755662778-989d0524087e?w=400'
+  },
+  {
+    name: 'Vegetable Noodles',
+    description: 'Wok-tossed noodles with fresh vegetables',
+    price: 160,
+    category: 'lunch',
+    veg: true,
+    restaurantIndex: 6,
+    popularity: 150,
+    imageUrl: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400'
+  },
+  {
+    name: 'Tom Yum Soup',
+    description: 'Hot and sour Thai soup with shrimp',
+    price: 220,
+    category: 'dinner',
+    veg: false,
+    restaurantIndex: 6,
+    popularity: 130,
+    imageUrl: 'https://images.unsplash.com/photo-1548943487-a2e4e43b4853?w=400'
+  },
+  {
+    name: 'Spring Rolls',
+    description: 'Crispy vegetable spring rolls with dipping sauce',
+    price: 140,
+    category: 'snacks',
+    veg: true,
+    restaurantIndex: 6,
+    popularity: 120,
+    imageUrl: 'https://images.unsplash.com/photo-1606331191459-420dc2fa5d3d?w=400'
+  },
+  {
+    name: 'Chicken Fried Rice',
+    description: 'Wok-fried rice with chicken and vegetables',
+    price: 200,
+    category: 'lunch',
+    veg: false,
+    restaurantIndex: 6,
+    popularity: 160,
+    imageUrl: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400'
   }
 ];
 const seedDatabase = async () => {
@@ -444,21 +499,18 @@ const seedDatabase = async () => {
     await mongoose.connect(uri);
     console.log('Connected to MongoDB...');
 
-    // 1. Clear existing data
     await Restaurant.deleteMany({});
     await Menu.deleteMany({});
     await User.deleteMany({});
     await Badge.deleteMany({});
     console.log('Cleared existing data');
 
-    // 2. Create Badges
     await Badge.insertMany(badges);
     console.log(`Created ${badges.length} badges`);
 
-    // 3. Create a Test User
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash('password123', salt);
-    
+
     await User.create({
       name: 'Test User',
       email: 'test@example.com',
@@ -466,7 +518,6 @@ const seedDatabase = async () => {
     });
     console.log('Created User: test@example.com / password123');
 
-    // 4. Create Admin User
     const adminHashedPassword = await bcrypt.hash('admin123', salt);
     await User.create({
       name: 'Admin',
@@ -476,16 +527,14 @@ const seedDatabase = async () => {
     });
     console.log('Created Admin: admin@example.com / admin123');
 
-    // 5. Insert restaurants
     const createdRestaurants = await Restaurant.insertMany(restaurants);
     console.log(`Created ${createdRestaurants.length} restaurants`);
 
-    // 6. Insert menu items with correct restaurant references
     const menuItemsToInsert = menuItems.map(item => ({
       ...item,
       restaurantId: createdRestaurants[item.restaurantIndex]._id
     }));
-    
+
     await Menu.insertMany(menuItemsToInsert);
     console.log(`Created ${menuItemsToInsert.length} menu items`);
 
@@ -497,5 +546,4 @@ const seedDatabase = async () => {
   }
 };
 
-// Execute the function
 seedDatabase();

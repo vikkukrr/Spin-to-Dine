@@ -87,7 +87,7 @@ const Login = () => {
             transition={{ delay: 0.2, duration: 0.35 }}
           >
             <label htmlFor="password">Password</label>
-            <div className="auth-input-icon" style={{ position: 'relative' }}>
+            <div className="auth-input-icon">
               <span className="input-icon">🔒</span>
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -100,12 +100,8 @@ const Login = () => {
               />
               <button
                 type="button"
+                className="password-toggle-btn"
                 onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
-                  background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem',
-                  padding: 4, color: 'var(--text-muted)'
-                }}
                 tabIndex={-1}
               >
                 {showPassword ? '🙈' : '👁️'}
@@ -114,8 +110,7 @@ const Login = () => {
           </motion.div>
 
           <motion.div
-            className="form-group"
-            style={{ textAlign: 'right', marginTop: -8 }}
+            className="form-group forgot-password-group"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.25, duration: 0.35 }}
@@ -134,10 +129,10 @@ const Login = () => {
               disabled={loading}
               whileHover={{ scale: loading ? 1 : 1.01 }}
               whileTap={{ scale: loading ? 1 : 0.98 }}
-              style={{ padding: '14px 24px', fontSize: '0.95rem' }}
+
             >
               {loading ? (
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                <span className="btn-loading">
                   <span className="loading-dot" /> Logging in...
                 </span>
               ) : 'Login'}
@@ -200,14 +195,7 @@ const Login = () => {
         </motion.p>
       </motion.div>
 
-      <style>{`
-        .loading-dot {
-          width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3);
-          border-top-color: white; border-radius: 50%;
-          animation: spin 0.6s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-      `}</style>
+
     </div>
   );
 };

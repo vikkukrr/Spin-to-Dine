@@ -4,6 +4,20 @@ import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { useToast } from "../context/ToastContext";
 import spinService from "../services/spinService";
+import { getFallbackSpinSuggestions, createFallbackSpinLog } from "../services/fallbackData";
+
+const SEGMENT_COLORS = ['#FF6B6B', '#FFD93D', '#6BCB77', '#4D96FF', '#FF922B', '#CC5DE8', '#20C997', '#F06595'];
+
+function formatSegmentText(name) {
+  if (name.length <= 12) return [name];
+  const parts = name.split(' ');
+  if (parts.length === 1) {
+    const mid = Math.ceil(name.length / 2);
+    return [name.slice(0, mid), name.slice(mid)];
+  }
+  const midIdx = Math.ceil(parts.length / 2);
+  return [parts.slice(0, midIdx).join(' '), parts.slice(midIdx).join(' ')];
+}
 
 const SpinWheel = () => {
   const { user, isAuthenticated } = useAuth();
@@ -22,7 +36,22 @@ const SpinWheel = () => {
   const [currentStreak, setCurrentStreak] = useState(0);
   const [loyaltyPoints, setLoyaltyPoints] = useState(0);
   const [pointsEarned, setPointsEarned] = useState(0);
+  const [currentLogId, setCurrentLogId] = useState(null);
   const angle = 360 / (suggestions.length || 1);
+
+  const sparklePositions = React.useMemo(() => {
+    const positions = [
+      { top: '8%', left: '5%' },
+      { top: '85%', left: '92%' },
+      { top: '12%', left: '88%' },
+      { top: '80%', left: '10%' },
+      { top: '50%', left: '2%' },
+      { top: '45%', left: '95%' },
+      { top: '5%', left: '50%' },
+      { top: '90%', left: '48%' },
+    ];
+    return positions;
+  }, []);
 
   const fetchSuggestions = useCallback(async () => {
     try {
@@ -34,7 +63,12 @@ const SpinWheel = () => {
       setLoyaltyPoints(data.loyaltyPoints || 0);
       setError(null);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to load suggestions");
+      const fallback = getFallbackSpinSuggestions(user._id);
+      setSuggestions(fallback.suggestions);
+      setSpinCount(fallback.todaySpinCount);
+      setCurrentStreak(fallback.currentStreak);
+      setLoyaltyPoints(fallback.loyaltyPoints);
+      setError(null);
     } finally {
       setLoading(false);
     }
@@ -79,6 +113,7 @@ const SpinWheel = () => {
         score: dish.scores?.total,
         timeSlot: dish.timeSlot,
       });
+      setCurrentLogId(res.log?._id);
       setLoyaltyPoints(res.loyaltyPoints);
       setCurrentStreak(res.currentStreak);
       setPointsEarned(res.pointsEarned || 10);
@@ -86,12 +121,29 @@ const SpinWheel = () => {
         addToast(`🔥 ${res.currentStreak} day streak! Bonus +5 points!`, 'info');
       }
     } catch (err) {
-      console.error("Failed to log spin:", err);
+      const fallback = createFallbackSpinLog({
+        menuItemId: dish._id,
+        restaurantId: dish.restaurant?._id,
+        score: dish.scores?.total,
+        timeSlot: dish.timeSlot,
+      });
+      setCurrentLogId(null);
+      setLoyaltyPoints(fallback.loyaltyPoints);
+      setCurrentStreak(fallback.currentStreak);
+      setPointsEarned(fallback.pointsEarned);
     }
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!selectedDish) return;
+
+    if (currentLogId) {
+      try {
+        await spinService.acceptSpinLog(currentLogId);
+      } catch (err) {
+        console.error('Failed to mark spin as accepted');
+      }
+    }
 
     const restaurantInfo = {
       _id: selectedDish.restaurant?._id,
@@ -112,12 +164,14 @@ const SpinWheel = () => {
 
     setShowModal(false);
     setSelectedDish(null);
+    setCurrentLogId(null);
     navigate("/cart");
   };
 
   const closeModal = () => {
     setShowModal(false);
     setSelectedDish(null);
+    setCurrentLogId(null);
   };
 
   if (loading) {
@@ -163,19 +217,63 @@ const SpinWheel = () => {
       <div className="spin-wheel-wrapper">
         <div
           className={`spin-wheel ${spinning ? "spinning" : ""}`}
-          style={{ transform: `rotate(${rotation}deg)` }}
+          style={{
+            transform: `rotate(${rotation}deg)`,
+            background: `conic-gradient(${suggestions.map((_, i) => {
+              const segAngle = 360 / suggestions.length;
+              const start = i * segAngle;
+              const colorEnd = (i + 1) * segAngle - 0.8;
+              const sepEnd = (i + 1) * segAngle;
+              const color = SEGMENT_COLORS[i % SEGMENT_COLORS.length];
+              return `${color} ${start}deg ${colorEnd}deg, rgba(255,255,255,0.4) ${colorEnd}deg ${sepEnd}deg`;
+            }).join(', ')})`,
+          }}
         >
-          {suggestions.map((dish, index) => (
-            <div
-              key={dish._id}
-              className="wheel-segment"
-              style={{ transform: `rotate(${index * angle}deg)` }}
-            >
-              <span className="segment-text" style={{ transform: `rotate(${angle / 2}deg)` }}>
-                {dish.name.substring(0, 15)}
-              </span>
-            </div>
-          ))}
+          <svg
+            className="wheel-text-overlay"
+            viewBox="0 0 100 100"
+            style={{
+              position: 'absolute', top: 0, left: 0,
+              width: '100%', height: '100%',
+              zIndex: 5, pointerEvents: 'none',
+              overflow: 'visible',
+            }}
+          >
+            {suggestions.map((dish, index) => {
+              const midAngle = (index + 0.5) * angle;
+              const isLeftSide = midAngle > 90 && midAngle < 270;
+              const textRotation = isLeftSide ? midAngle + 180 : midAngle;
+              const rad = ((midAngle - 90) * Math.PI) / 180;
+              const r = 35;
+              const x = 50 + r * Math.cos(rad);
+              const y = 50 + r * Math.sin(rad);
+              const lines = formatSegmentText(dish.name);
+              return (
+                <text
+                  key={dish._id}
+                  x={x}
+                  y={y}
+                  transform={`rotate(${textRotation}, ${x}, ${y})`}
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  fill="white"
+                  fontWeight="800"
+                  fontSize="3.8"
+                  style={{ textShadow: '0 1px 3px rgba(0,0,0,0.7), 0 0 8px rgba(0,0,0,0.4)' }}
+                >
+                  {lines.map((line, li) => (
+                    <tspan
+                      key={li}
+                      x={x}
+                      dy={li === 0 ? '-0.6em' : '1.2em'}
+                    >
+                      {line}
+                    </tspan>
+                  ))}
+                </text>
+              );
+            })}
+          </svg>
         </div>
 
         <button
@@ -185,6 +283,20 @@ const SpinWheel = () => {
         >
           {spinning ? "Spinning..." : spinCount >= 3 ? "No Spins Left" : "SPIN!"}
         </button>
+
+        <div className="spin-pointer" />
+
+        {sparklePositions.map((pos, i) => (
+          <span
+            key={i}
+            className="sparkle"
+            style={{
+              top: pos.top,
+              left: pos.left,
+              animationDelay: `${i * 0.3}s`,
+            }}
+          />
+        ))}
       </div>
 
       <div className="suggestions-list">

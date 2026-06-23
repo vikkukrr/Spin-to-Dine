@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import api from '../services/api';
 import RestaurantCard from '../components/RestaurantCard';
 import LoadingSkeleton from '../components/LoadingSkeleton';
@@ -21,7 +21,7 @@ const FEATURED_DISHES = [
 
 const TESTIMONIALS = [
   { name: 'Rahul S.', avatar: '👨‍💼', text: 'The spin wheel is genius! Found my new favorite restaurant.', rating: 5 },
-  { name: 'Priya M.', avatar: '👩‍💼', text: 'Love the loyalty points — I\'ve earned 5 badge already!', rating: 5 },
+  { name: 'Priya M.', avatar: '👩‍💼', text: 'Love the loyalty points — I\'ve earned 5 badges already!', rating: 5 },
   { name: 'Amit K.', avatar: '🧑‍💼', text: 'Fast delivery and the food is always fresh. Highly recommend!', rating: 5 },
   { name: 'Neha G.', avatar: '👩‍🎤', text: 'The leaderboard makes ordering so much more fun!', rating: 5 },
   { name: 'Vikram R.', avatar: '👨‍🎤', text: 'Best food delivery app in town. The UI is gorgeous!', rating: 5 },
@@ -71,7 +71,6 @@ const Home = () => {
   const [stickyFilter, setStickyFilter] = useState(false);
   const [testimonialIdx, setTestimonialIdx] = useState(0);
   const [currentImage, setCurrentImage] = useState(0);
-  const [scrollY, setScrollY] = useState(0);
   const searchTimeout = useRef(null);
   const filterRef = useRef(null);
   const heroRef = useRef(null);
@@ -88,14 +87,6 @@ const Home = () => {
       setCurrentImage(prev => (prev + 1) % HERO_IMAGES.length);
     }, 4500);
     return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-    if (isMobile) return;
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const fetchRestaurants = useCallback(async (activeFilters, pageNum = 1) => {
@@ -181,7 +172,7 @@ const Home = () => {
   return (
     <div>
       <section className="hero-section" ref={heroRef}>
-        <div className="hero-carousel" style={{ transform: window.innerWidth >= 768 ? `translateY(${scrollY * 0.15}px)` : 'none' }}>
+        <div className="hero-carousel">
           {HERO_IMAGES.map((img, i) => (
             <div
               key={img}
@@ -199,7 +190,7 @@ const Home = () => {
         <div className="hero-container">
           <div className="hero-content-left">
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <div className="hero-badge">🌟 Premium Food Delivery</div>
+              <div className="hero-badge">🔥 Trending Near You</div>
             </motion.div>
             <motion.h1 className="hero-title" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
               Discover Delicious<br />
@@ -223,6 +214,17 @@ const Home = () => {
                 🎰 Spin the Wheel
               </button>
             </motion.div>
+            <motion.div className="hero-category-chips" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }}>
+              {[{ icon: '🍕', label: 'Pizza' }, { icon: '🍔', label: 'Burgers' }, { icon: '🥗', label: 'Healthy' }, { icon: '🍣', label: 'Sushi' }].map((chip) => (
+                <button
+                  key={chip.label}
+                  className="hero-chip"
+                  onClick={() => { setFilters(prev => ({ ...prev, cuisine: chip.label })); setPage(1); }}
+                >
+                  {chip.icon} {chip.label}
+                </button>
+              ))}
+            </motion.div>
           </div>
         </div>
         <div className="hero-floating-elements">
@@ -230,24 +232,15 @@ const Home = () => {
             <div className="float-rating-stars">⭐⭐⭐⭐⭐</div>
             <div className="float-rating-text">4.9 ★ Overall Rating</div>
           </motion.div>
-          <motion.div className="float-element float-delivery" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.8 }}>
-            🚚 Free Delivery • 25-35 min
-          </motion.div>
-          <motion.div className="float-element float-dish" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 1.0 }}>
+          <motion.div className="float-element float-dish" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.9 }}>
             <span className="float-dish-icon">🍕</span>
             <div>
               <div className="float-dish-name">Margherita Pizza</div>
               <div className="float-dish-price">₹249</div>
             </div>
           </motion.div>
-          <motion.div className="float-element float-category" initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 1.2 }}>
-            🍔 Burgers
-          </motion.div>
-          <motion.div className="float-element float-category-2" initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 1.3 }}>
-            🥗 Healthy
-          </motion.div>
-          <motion.div className="float-element float-trending" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.4 }}>
-            🔥 Trending Near You
+          <motion.div className="float-element float-delivery" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.2 }}>
+            🚚 Free Delivery • 25–35 min
           </motion.div>
         </div>
         <div className="hero-indicators">
@@ -257,35 +250,73 @@ const Home = () => {
         </div>
       </section>
 
-      <motion.section {...fadeUp} className="max-w-6xl mx-auto px-5 -mt-9 relative z-10 mb-12">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="font-serif text-xl font-bold text-primary-900">What are you craving?</h2>
-          <Link to="/spin" className="text-primary-600 text-sm font-semibold hover:text-primary-700">Can't decide? 🎰</Link>
+      <div className="quick-stats">
+        <div className="quick-stat">
+          <span className="quick-stat-icon">🍽️</span>
+          <span className="quick-stat-value">50+</span>
+          <span className="quick-stat-label">Restaurants</span>
         </div>
-        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
+        <div className="quick-stat-divider" />
+        <div className="quick-stat">
+          <span className="quick-stat-icon">⚡</span>
+          <span className="quick-stat-value">30 min</span>
+          <span className="quick-stat-label">avg delivery</span>
+        </div>
+        <div className="quick-stat-divider" />
+        <div className="quick-stat">
+          <span className="quick-stat-icon">⭐</span>
+          <span className="quick-stat-value">4.8</span>
+          <span className="quick-stat-label">avg rating</span>
+        </div>
+        <div className="quick-stat-divider" />
+        <button className="quick-stat quick-stat-spin" onClick={() => navigate('/spin')}>
+          <span className="quick-stat-icon">🎰</span>
+          <span className="quick-stat-label">Spin & Discover</span>
+        </button>
+        <div className="quick-stat-divider" />
+        <Link to="/spin" className="quick-stat quick-stat-link">Can't decide? 🎰</Link>
+      </div>
+
+      <motion.section {...fadeUp} className="categories-section">
+        <div className="categories-header">
+          <h2>What are you craving?</h2>
+        </div>
+        <div className="categories-scroll">
           {['🍕', '🍔', '🍜', '🍰', '☕', '🥗'].map((icon, i) => (
-            <button key={i} className="flex flex-col items-center gap-2 px-5 py-4 bg-white border border-[var(--border)] rounded-2xl cursor-pointer min-w-[90px] shrink-0 transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-transparent hover:bg-[var(--secondary)]" onClick={() => { setFilters(prev => ({ ...prev, cuisine: ['Pizza', 'Burgers', 'Asian', 'Desserts', 'Cafe', 'Healthy'][i] })); setPage(1); }}>
-              <span className="text-2xl">{icon}</span>
-              <span className="text-xs font-semibold text-primary-900 whitespace-nowrap">{['Pizza', 'Burgers', 'Asian', 'Desserts', 'Cafe', 'Healthy'][i]}</span>
+            <button
+              key={i}
+              className="craving-card"
+              onClick={() => { setFilters(prev => ({ ...prev, cuisine: ['Pizza', 'Burgers', 'Asian', 'Desserts', 'Cafe', 'Healthy'][i] })); setPage(1); }}
+            >
+              <span className="craving-card-icon">{icon}</span>
+              <span className="craving-card-label">{['Pizza', 'Burgers', 'Asian', 'Desserts', 'Cafe', 'Healthy'][i]}</span>
             </button>
           ))}
         </div>
       </motion.section>
 
-      <motion.section {...fadeUp} className="max-w-6xl mx-auto px-5 mb-14">
+      <motion.section {...fadeUp} className="categories-section">
         <div className="text-center mb-8">
           <h2 className="section-title">Most Loved Dishes</h2>
           <p className="section-subtitle mx-auto">Our community's top picks — tried, tested, and loved by foodies like you</p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {FEATURED_DISHES.map((dish, i) => (
-            <motion.div key={dish.name} className="bg-white rounded-2xl p-4 text-center border border-[var(--border)] cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-lg" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.08 }}>
-              <div className="text-4xl mb-3">{dish.image}</div>
-              <h3 className="font-semibold text-sm text-primary-900 mb-1">{dish.name}</h3>
-              <p className="text-xs text-[var(--text-muted)] mb-2">{dish.restaurant}</p>
+            <motion.div
+              key={dish.name}
+              className="craving-card"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.08 }}
+              style={{ padding: '16px 12px', minWidth: 'auto' }}
+            >
+              <div className="craving-card-icon" style={{ fontSize: '2.5rem' }}>{dish.image}</div>
+              <h3 className="craving-card-label" style={{ fontSize: '0.82rem', marginBottom: 2 }}>{dish.name}</h3>
+              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.72rem', marginBottom: 6 }}>{dish.restaurant}</p>
               <div className="flex items-center justify-center gap-2">
-                <span className="text-xs bg-primary-500 text-white px-2 py-0.5 rounded-full font-semibold">⭐ {dish.rating}</span>
-                <span className="text-sm font-bold text-primary-600">{dish.price}</span>
+                <span style={{ background: '#FF6B35', color: 'white', padding: '2px 8px', borderRadius: 999, fontSize: '0.68rem', fontWeight: 700 }}>⭐ {dish.rating}</span>
+                <span style={{ color: '#FF6B35', fontWeight: 700, fontSize: '0.85rem' }}>{dish.price}</span>
               </div>
             </motion.div>
           ))}
@@ -337,7 +368,7 @@ const Home = () => {
       <section className="restaurants-section" id="restaurants">
         <div className="restaurants-header">
           <div>
-            <h2 className="font-serif text-xl font-bold text-primary-900">Restaurants Near You</h2>
+            <h2>Restaurants Near You</h2>
             {total > 0 && <span className="restaurants-count">{total} restaurants</span>}
           </div>
           <div className="restaurants-header-actions">
@@ -388,7 +419,7 @@ const Home = () => {
           <div className="spin-cta-glow" />
           <div className="spin-cta-content">
             <motion.div className="spin-cta-icon" animate={{ y: [0, -8, 0], rotate: [0, -5, 5, 0] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}>🎰</motion.div>
-            <h2 className="font-serif">Can't Decide? Let Spin-to-Dine Choose For You!</h2>
+            <h2>Can't Decide? Let Spin-to-Dine Choose For You!</h2>
             <p>Spin the wheel and let fate pick your next meal. Earn loyalty points and badges along the way!</p>
             <motion.button className="spin-cta-btn" onClick={() => navigate('/spin')} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <span>Spin Now</span>
@@ -405,44 +436,80 @@ const Home = () => {
         </div>
       </motion.section>
 
-      <motion.section {...fadeUp} className="max-w-6xl mx-auto px-5 mb-16">
+      <motion.section {...fadeUp} className="categories-section" style={{ marginBottom: '4rem' }}>
         <div className="text-center mb-8">
           <h2 className="section-title">What Our Foodies Say</h2>
           <p className="section-subtitle mx-auto">Real reviews from real people who love Spin-to-Dine</p>
         </div>
-        <div className="relative max-w-2xl mx-auto">
-          <motion.div key={testimonialIdx} className="bg-white rounded-3xl p-8 md:p-10 text-center border border-[var(--border)] shadow-md" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }} transition={{ duration: 0.4 }}>
-            <div className="text-5xl mb-4">{TESTIMONIALS[testimonialIdx].avatar}</div>
-            <div className="flex justify-center gap-1 mb-4">
+        <div className="relative" style={{ maxWidth: '600px', margin: '0 auto' }}>
+          <motion.div
+            key={testimonialIdx}
+            style={{
+              background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              borderRadius: '20px',
+              padding: '2rem',
+              textAlign: 'center',
+              color: 'white'
+            }}
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -40 }}
+            transition={{ duration: 0.4 }}
+          >
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>{TESTIMONIALS[testimonialIdx].avatar}</div>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '4px', marginBottom: '1rem' }}>
               {Array.from({ length: 5 }).map((_, i) => (
-                <span key={i} className={`text-xl ${i < TESTIMONIALS[testimonialIdx].rating ? 'opacity-100' : 'opacity-20'}`}>⭐</span>
+                <span key={i} style={{ color: i < TESTIMONIALS[testimonialIdx].rating ? '#FFD700' : 'rgba(255,255,255,0.2)', fontSize: '1.3rem' }}>★</span>
               ))}
             </div>
-            <p className="text-lg text-primary-900/80 mb-5 italic leading-relaxed">"{TESTIMONIALS[testimonialIdx].text}"</p>
-            <p className="font-semibold text-primary-900">{TESTIMONIALS[testimonialIdx].name}</p>
+            <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1rem', marginBottom: '1rem', fontStyle: 'italic', lineHeight: 1.6 }}>
+              "{TESTIMONIALS[testimonialIdx].text}"
+            </p>
+            <p style={{ color: '#FF6B35', fontWeight: 600 }}>{TESTIMONIALS[testimonialIdx].name}</p>
           </motion.div>
           <div className="flex justify-center gap-2 mt-5">
             {TESTIMONIALS.map((_, i) => (
-              <button key={i} className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${i === testimonialIdx ? 'bg-primary-500 w-6' : 'bg-[var(--border)]'}`} onClick={() => setTestimonialIdx(i)} />
+              <button
+                key={i}
+                style={{
+                  width: i === testimonialIdx ? '24px' : '10px',
+                  height: '10px',
+                  borderRadius: '999px',
+                  border: 'none',
+                  background: i === testimonialIdx ? '#FF6B35' : 'rgba(255,255,255,0.2)',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s'
+                }}
+                onClick={() => setTestimonialIdx(i)}
+              />
             ))}
           </div>
         </div>
       </motion.section>
 
-      <motion.section {...fadeUp} className="max-w-6xl mx-auto px-5 mb-16">
+      <motion.section {...fadeUp} className="categories-section" style={{ marginBottom: '4rem' }}>
         <div className="text-center mb-8">
           <h2 className="section-title">Latest Recipes</h2>
           <p className="section-subtitle mx-auto">Quick and delicious recipes inspired by our top restaurants</p>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {RECIPES.map((recipe, i) => (
-            <motion.div key={recipe.title} className="bg-white rounded-2xl overflow-hidden border border-[var(--border)] transition-all duration-300 hover:-translate-y-2 hover:shadow-lg cursor-pointer" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.1 }}>
-              <div className="h-44 flex items-center justify-center text-6xl bg-gradient-to-br from-primary-50 to-cream-100">{recipe.image}</div>
-              <div className="p-5">
-                <h3 className="font-serif font-bold text-lg text-primary-900 mb-3">{recipe.title}</h3>
-                <div className="flex items-center gap-4 text-sm text-[var(--text-muted)]">
+            <motion.div
+              key={recipe.title}
+              className="craving-card"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.1 }}
+              style={{ padding: 0, overflow: 'hidden', minWidth: 'auto' }}
+            >
+              <div style={{ height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '4rem', background: 'rgba(0,0,0,0.2)', width: '100%' }}>{recipe.image}</div>
+              <div style={{ padding: '20px', width: '100%' }}>
+                <h3 style={{ color: '#FF6B35', fontWeight: 700, fontSize: '1rem', marginBottom: '0.75rem' }}>{recipe.title}</h3>
+                <div className="flex items-center gap-4" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.82rem' }}>
                   <span>⏱ {recipe.time}</span>
-                  <span className="w-1 h-1 rounded-full bg-[var(--border)]" />
+                  <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'rgba(255,255,255,0.2)' }} />
                   <span>{recipe.difficulty}</span>
                 </div>
               </div>
@@ -451,58 +518,85 @@ const Home = () => {
         </div>
       </motion.section>
 
-      <motion.section {...fadeUp} className="max-w-6xl mx-auto px-5 mb-16">
-        <div className="bg-gradient-to-br from-primary-600 to-primary-700 rounded-3xl p-10 md:p-14 text-center text-white">
+      <motion.section {...fadeUp} className="categories-section" style={{ marginBottom: '4rem' }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #1a3a1a, #2d4a2d)',
+          borderRadius: '24px',
+          padding: '3rem 2rem',
+          textAlign: 'center',
+          color: 'white'
+        }}>
           <motion.div initial={{ scale: 0.8, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
-            <div className="text-4xl mb-4">✉️</div>
-            <h2 className="font-serif text-2xl md:text-3xl font-bold mb-3">Stay in the Loop</h2>
-            <p className="text-primary-100/80 mb-6 max-w-md mx-auto">Get exclusive deals, new restaurant alerts, and recipe inspiration delivered to your inbox.</p>
-            <form className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto" onSubmit={e => e.preventDefault()}>
-              <input type="email" placeholder="Enter your email" className="flex-1 px-5 py-3.5 rounded-xl border-none text-primary-900 text-sm outline-none focus:ring-2 focus:ring-gold-400 font-sans" />
-              <button type="submit" className="btn-gold whitespace-nowrap">Subscribe</button>
+            <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>✉️</div>
+            <h2 className="font-serif" style={{ fontSize: 'clamp(1.3rem, 3vw, 2rem)', fontWeight: 700, marginBottom: '0.75rem', color: '#ffffff' }}>Stay in the Loop</h2>
+            <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '1.5rem', maxWidth: '400px', marginLeft: 'auto', marginRight: 'auto' }}>Get exclusive deals, new restaurant alerts, and recipe inspiration delivered to your inbox.</p>
+            <form className="flex flex-col sm:flex-row gap-3" style={{ maxWidth: '450px', margin: '0 auto' }} onSubmit={e => e.preventDefault()}>
+              <input type="email" placeholder="Enter your email" style={{
+                flex: 1,
+                padding: '14px 20px',
+                borderRadius: '12px',
+                border: '1px solid rgba(255,255,255,0.2)',
+                background: 'rgba(0,0,0,0.3)',
+                color: 'white',
+                fontSize: '0.9rem',
+                outline: 'none',
+                fontFamily: 'inherit'
+              }} />
+              <button type="submit" style={{
+                background: '#FF6B35',
+                color: 'white',
+                border: 'none',
+                borderRadius: '12px',
+                padding: '14px 28px',
+                fontWeight: 700,
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+                whiteSpace: 'nowrap'
+              }}>Subscribe</button>
             </form>
           </motion.div>
         </div>
       </motion.section>
 
-      <footer className="bg-primary-900 text-white">
-        <div className="max-w-6xl mx-auto px-5 py-12">
+      <footer style={{ background: '#0f1f0f', color: 'white' }}>
+        <div className="max-w-7xl mx-auto px-5 py-12">
           <div className="grid md:grid-cols-4 gap-8 mb-10">
             <div className="md:col-span-1">
               <div className="flex items-center gap-2 text-xl font-bold mb-4">
                 <span>🍔</span>
-                <span className="text-white">Spin-to-Dine</span>
+                <span>Spin-to-Dine</span>
               </div>
-              <p className="text-primary-200/70 text-sm leading-relaxed">Discover delicious food near you. Spin, order, and earn rewards with every meal.</p>
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.88rem', lineHeight: 1.7 }}>Discover delicious food near you. Spin, order, and earn rewards with every meal.</p>
             </div>
             <div>
-              <h4 className="font-semibold text-white mb-4">Quick Links</h4>
-              <div className="flex flex-col gap-2.5 text-sm text-primary-200/70">
-                <Link to="/" className="hover:text-white transition-colors">Home</Link>
-                <Link to="/spin" className="hover:text-white transition-colors">Spin Wheel</Link>
-                <Link to="/leaderboard" className="hover:text-white transition-colors">Leaderboard</Link>
-                <Link to="/menu" className="hover:text-white transition-colors">Full Menu</Link>
-              </div>
-            </div>
-            <div>
-              <h4 className="font-semibold text-white mb-4">Account</h4>
-              <div className="flex flex-col gap-2.5 text-sm text-primary-200/70">
-                <Link to="/profile" className="hover:text-white transition-colors">My Profile</Link>
-                <Link to="/orders" className="hover:text-white transition-colors">My Orders</Link>
-                <Link to="/favorites" className="hover:text-white transition-colors">Favorites</Link>
-                <Link to="/cart" className="hover:text-white transition-colors">Cart</Link>
+              <h4 style={{ fontWeight: 600, marginBottom: '1rem', color: '#ffffff' }}>Quick Links</h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.88rem' }}>
+                <Link to="/" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>Home</Link>
+                <Link to="/spin" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>Spin Wheel</Link>
+                <Link to="/leaderboard" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>Leaderboard</Link>
+                <Link to="/menu" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>Full Menu</Link>
               </div>
             </div>
             <div>
-              <h4 className="font-semibold text-white mb-4">Contact</h4>
-              <div className="flex flex-col gap-2.5 text-sm text-primary-200/70">
+              <h4 style={{ fontWeight: 600, marginBottom: '1rem', color: '#ffffff' }}>Account</h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.88rem' }}>
+                <Link to="/profile" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>My Profile</Link>
+                <Link to="/orders" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>My Orders</Link>
+                <Link to="/favorites" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>Favorites</Link>
+                <Link to="/cart" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>Cart</Link>
+              </div>
+            </div>
+            <div>
+              <h4 style={{ fontWeight: 600, marginBottom: '1rem', color: '#ffffff' }}>Contact</h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.88rem', color: 'rgba(255,255,255,0.6)' }}>
                 <span>📧 hello@spintodine.com</span>
                 <span>📞 +1 234 567 890</span>
                 <span>📍 123 Foodie Lane, NYC</span>
               </div>
             </div>
           </div>
-          <div className="border-t border-primary-700/50 pt-6 text-center text-sm text-primary-200/50">
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1.5rem', textAlign: 'center', fontSize: '0.82rem', color: 'rgba(255,255,255,0.4)' }}>
             <p>© {new Date().getFullYear()} Spin-to-Dine. All rights reserved. Made with ❤️ for food lovers.</p>
           </div>
         </div>

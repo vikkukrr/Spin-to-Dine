@@ -72,6 +72,10 @@ const Leaderboard = () => {
     return `#${rank}`;
   };
 
+  const getAvatar = (name) => {
+    return name?.charAt(0).toUpperCase() || '?';
+  };
+
   return (
     <div className="leaderboard-page">
       <h1>Leaderboard</h1>
@@ -101,7 +105,7 @@ const Leaderboard = () => {
                 <span className="rank-number">{getMedal(entry.rank)}</span>
               </div>
               <div className="leaderboard-avatar">
-                {entry.name?.charAt(0).toUpperCase() || '?'}
+                {getAvatar(entry.name)}
               </div>
               <div className="leaderboard-info">
                 <h3>{entry.name}</h3>

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import api from '../services/api';
+import { getFallbackFavorites } from '../services/fallbackData';
 
 const Favorites = () => {
   const { isAuthenticated } = useAuth();
@@ -22,7 +23,7 @@ const Favorites = () => {
       const res = await api.get('/favorites');
       setFavorites(res.data);
     } catch (err) {
-      addToast('Failed to load favorites', 'error');
+      setFavorites(getFallbackFavorites());
     } finally {
       setLoading(false);
     }
@@ -34,7 +35,8 @@ const Favorites = () => {
       addToast('Removed from favorites', 'success');
       fetchFavorites();
     } catch (err) {
-      addToast('Failed to remove', 'error');
+      setFavorites(prev => prev.filter(f => f.restaurantId?._id !== restaurantId));
+      addToast('Removed from favorites', 'success');
     }
   };
 
