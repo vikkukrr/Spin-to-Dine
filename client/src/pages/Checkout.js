@@ -88,7 +88,7 @@ const Checkout = () => {
     return (
       <div className="checkout-page">
         <div className="order-success">
-          <div className="success-icon">✓</div>
+          <div className="success-icon">&#10003;</div>
           <h1>Order Placed Successfully!</h1>
           <p>Your order ID is: <strong>{orderId}</strong></p>
           <p>We'll notify you when your order is confirmed.</p>
@@ -123,46 +123,43 @@ const Checkout = () => {
 
   return (
     <div className="checkout-page">
-      <div className="checkout-header">
-        <h1>Checkout</h1>
-        <div className="checkout-steps">
-          <span className="checkout-step active">1. Delivery</span>
-          <span className="step-arrow">→</span>
-          <span className="checkout-step">2. Payment</span>
-          <span className="step-arrow">→</span>
-          <span className="checkout-step">3. Confirm</span>
-        </div>
-      </div>
+      <h1 className="checkout-title">Checkout</h1>
 
-      <div className="checkout-layout">
-        <div className="checkout-left">
+      <div className="checkout-grid">
+        {/* ---- LEFT COLUMN ---- */}
+        <div className="checkout-left-col">
+          {/* Delivery Details */}
           <div className="checkout-card">
-            <h2 className="checkout-card-title">📍 Delivery Details</h2>
+            <h2 className="checkout-card-title">&#x1F4CD; Delivery Details</h2>
             <div className="form-group">
-              <label>Delivery Address</label>
+              <label className="delivery-label">Delivery Address</label>
               <textarea
                 value={address}
                 onChange={e => setAddress(e.target.value)}
-                className="form-input"
+                className="delivery-textarea"
                 rows={3}
                 placeholder="Enter your delivery address"
               />
             </div>
             <div className="delivery-info-pills">
               {user?.name && (
-                <span className="info-pill">👤 {user.name}</span>
+                <span className="info-pill">&#x1F464; {user.name}</span>
               )}
               {user?.location && (
-                <span className="info-pill">📍 {user.location}</span>
+                <span className="info-pill">&#x1F4CD; {user.location}</span>
               )}
             </div>
           </div>
 
+          {/* Payment Method */}
           <div className="checkout-card">
-            <h2 className="checkout-card-title">💳 Payment Method</h2>
+            <h2 className="checkout-card-title">&#x1F4B3; Payment Method</h2>
             <div className="payment-methods">
               {PAYMENT_METHODS.map(pm => (
-                <label key={pm.value} className={`payment-option-card ${paymentMethod === pm.value ? 'selected' : ''}`}>
+                <label
+                  key={pm.value}
+                  className={`payment-method ${paymentMethod === pm.value ? 'selected' : ''}`}
+                >
                   <input
                     type="radio"
                     name="payment"
@@ -170,85 +167,94 @@ const Checkout = () => {
                     checked={paymentMethod === pm.value}
                     onChange={e => setPaymentMethod(e.target.value)}
                   />
-                  <span className="payment-icon">{pm.icon}</span>
-                  <span className="payment-option-label">{pm.label}</span>
+                  <span className="custom-radio">
+                    {paymentMethod === pm.value && <span className="custom-radio-dot" />}
+                  </span>
+                  <span className="payment-method-icon">{pm.icon}</span>
+                  <span className="payment-method-label">{pm.label}</span>
                 </label>
               ))}
             </div>
           </div>
 
+          {/* Coupon Code */}
           <div className="checkout-card">
-            <h2 className="checkout-card-title">🏷️ Coupon Code</h2>
-            <div className="coupon-input-group">
+            <h2 className="checkout-card-title">&#x1F3F7;&#xFE0F; Coupon Code</h2>
+            <div className="coupon-row">
               <input
                 type="text"
                 value={couponCode}
                 onChange={e => setCouponCode(e.target.value)}
-                className="form-input"
+                className="coupon-input"
                 placeholder="Enter coupon code"
               />
-              <button onClick={handleApplyCoupon} className="btn-secondary" type="button">Apply</button>
+              <button onClick={handleApplyCoupon} className="coupon-apply-btn" type="button">
+                Apply
+              </button>
             </div>
-            {discount > 0 && <p className="discount-text">Discount applied: -₹{discount}</p>}
+            {discount > 0 && <p className="discount-success">Discount applied: -&#x20B9;{discount}</p>}
           </div>
 
-          {error && <div className="error-message">{error}</div>}
+          {error && <div className="checkout-error">{error}</div>}
         </div>
 
-        <div className="checkout-right">
-          <div className="checkout-summary">
-            <h3 className="summary-title">Order Summary</h3>
+        {/* ---- RIGHT COLUMN ---- */}
+        <div className="checkout-right-col">
+          <div className="order-summary-card">
+            <h3 className="os-title">Order Summary</h3>
 
-            <div className="summary-restaurant">
-              {restaurant?.name}
-            </div>
+            {restaurant && (
+              <div className="os-restaurant">{restaurant.name}</div>
+            )}
 
-            <div className="summary-items">
+            <div className="os-items">
               {cart.map(item => (
-                <div key={item.cartId || item._id} className="summary-item">
-                  <span className="summary-item-name">
-                    {item.name} <span className="summary-item-qty">x {item.quantity}</span>
+                <div key={item.cartId || item._id} className="os-item">
+                  <span className="os-item-name">
+                    {item.name} &times; {item.quantity}
                   </span>
-                  <span className="summary-item-price">₹{item.price * item.quantity}</span>
+                  <span className="os-item-price">&#x20B9;{item.price * item.quantity}</span>
                 </div>
               ))}
             </div>
 
-            <div className="summary-divider" />
+            <div className="os-divider" />
 
-            <div className="summary-row">
-              <span>Subtotal</span>
-              <span>₹{subtotal}</span>
+            <div className="os-row">
+              <span className="os-label">Subtotal</span>
+              <span className="os-value">&#x20B9;{subtotal}</span>
             </div>
-            <div className="summary-row">
-              <span>Delivery Fee</span>
-              <span>₹{deliveryFee}</span>
+            <div className="os-row">
+              <span className="os-label">Delivery Fee</span>
+              <span className="os-value">&#x20B9;{deliveryFee}</span>
             </div>
             {discount > 0 && (
-              <div className="summary-row discount">
-                <span>Discount</span>
-                <span>-₹{discount}</span>
+              <div className="os-row os-discount">
+                <span className="os-label">Discount</span>
+                <span className="os-value">-&#x20B9;{discount}</span>
               </div>
             )}
 
-            <div className="summary-divider" />
+            <div className="os-divider" />
 
-            <div className="summary-row total">
-              <span>Total</span>
-              <span>₹{total}</span>
+            <div className="os-row os-total">
+              <span className="os-total-label">Total</span>
+              <span className="os-total-value">&#x20B9;{total}</span>
             </div>
 
-            <div className="summary-pay-badge">
+            <div className="os-pay-badge">
               Pay via: {PAYMENT_METHODS.find(p => p.value === paymentMethod)?.label}
             </div>
 
             <button
               onClick={handlePlaceOrder}
-              className="checkout-place-btn"
+              className="place-order-btn"
               disabled={loading}
             >
-              {loading ? 'Placing Order...' : `Place Order – ₹${total}`}
+              {loading ? 'Placing Order...' : `Place Order \u2014 \u20B9${total}`}
             </button>
+
+            <p className="os-security">&#x1F512; Safe &amp; Secure Checkout</p>
           </div>
         </div>
       </div>

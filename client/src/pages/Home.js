@@ -11,26 +11,32 @@ const CUISINE_OPTIONS = [
 ];
 
 const FEATURED_DISHES = [
-  { name: 'Margherita Pizza', image: '🍕', restaurant: 'Pizza Paradise', price: '₹249', rating: 4.8 },
-  { name: 'Butter Chicken', image: '🍛', restaurant: 'Taste of India', price: '₹349', rating: 4.9 },
-  { name: 'Sushi Platter', image: '🍣', restaurant: 'Tokyo Bay', price: '₹599', rating: 4.7 },
-  { name: 'Truffle Burger', image: '🍔', restaurant: 'Burger Lab', price: '₹299', rating: 4.6 },
-  { name: 'Greek Salad', image: '🥗', restaurant: 'Green Bowl', price: '₹199', rating: 4.5 },
-  { name: 'Chocolate Lava', image: '🍫', restaurant: 'Sweet Tooth', price: '₹179', rating: 4.9 },
+  { name: 'Margherita Pizza', image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=300&h=200&fit=crop', restaurant: 'Pizza Paradise', price: 249, rating: 4.8 },
+  { name: 'Butter Chicken', image: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=300&h=200&fit=crop', restaurant: 'Taste of India', price: 349, rating: 4.9 },
+  { name: 'Sushi Platter', image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=300&h=200&fit=crop', restaurant: 'Tokyo Bay', price: 599, rating: 4.7 },
+  { name: 'Truffle Burger', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&h=200&fit=crop', restaurant: 'Burger Lab', price: 299, rating: 4.6 },
+  { name: 'Greek Salad', image: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=300&h=200&fit=crop', restaurant: 'Green Bowl', price: 199, rating: 4.5 },
+  { name: 'Chocolate Lava', image: 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=300&h=200&fit=crop', restaurant: 'Sweet Tooth', price: 179, rating: 4.9 },
 ];
 
 const TESTIMONIALS = [
-  { name: 'Rahul S.', avatar: '👨‍💼', text: 'The spin wheel is genius! Found my new favorite restaurant.', rating: 5 },
-  { name: 'Priya M.', avatar: '👩‍💼', text: 'Love the loyalty points — I\'ve earned 5 badges already!', rating: 5 },
-  { name: 'Amit K.', avatar: '🧑‍💼', text: 'Fast delivery and the food is always fresh. Highly recommend!', rating: 5 },
-  { name: 'Neha G.', avatar: '👩‍🎤', text: 'The leaderboard makes ordering so much more fun!', rating: 5 },
-  { name: 'Vikram R.', avatar: '👨‍🎤', text: 'Best food delivery app in town. The UI is gorgeous!', rating: 5 },
+  { name: 'Rahul S.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face', text: 'The spin wheel is genius! Found my new favorite restaurant.', rating: 5, role: 'Food Explorer' },
+  { name: 'Priya M.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face', text: 'Love the loyalty points — I\'ve earned 5 badges already!', rating: 5, role: 'Loyal Foodie' },
+  { name: 'Amit K.', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face', text: 'Fast delivery and the food is always fresh. Highly recommend!', rating: 5, role: 'Regular Customer' },
+  { name: 'Neha G.', avatar: '👩‍🎤', text: 'The leaderboard makes ordering so much more fun!', rating: 5, role: 'Verified Foodie' },
+  { name: 'Vikram R.', avatar: '👨‍🎤', text: 'Best food delivery app in town. The UI is gorgeous!', rating: 5, role: 'Verified Foodie' },
+];
+
+const REVIEW_STATS = [
+  { value: '500+', label: 'Happy Customers' },
+  { value: '4.8\u2605', label: 'Average Rating' },
+  { value: '98%', label: 'Satisfaction Rate' },
 ];
 
 const RECIPES = [
-  { title: '5-Minute Pasta Aglio Olio', time: '5 min', difficulty: 'Easy', image: '🍝' },
-  { title: 'Crispy Honey Chilli Potato', time: '20 min', difficulty: 'Medium', image: '🥔' },
-  { title: 'Mango Lassi Smoothie Bowl', time: '10 min', difficulty: 'Easy', image: '🥭' },
+  { title: '5-Minute Pasta Aglio Olio', time: '5 min', difficulty: 'Easy', image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&h=220&fit=crop' },
+  { title: 'Crispy Honey Chilli Potato', time: '20 min', difficulty: 'Medium', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=220&fit=crop' },
+  { title: 'Mango Lassi Smoothie Bowl', time: '10 min', difficulty: 'Easy', image: 'https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?w=400&h=220&fit=crop' },
 ];
 
 const HERO_IMAGES = [
@@ -287,28 +293,39 @@ const Home = () => {
         </div>
       </motion.section>
 
-      <motion.section {...fadeUp} className="categories-section">
-        <div className="text-center mb-8">
+      <motion.section {...fadeUp} className="most-loved-section">
+        <div className="text-center mb-6">
           <h2 className="section-title">Most Loved Dishes</h2>
           <p className="section-subtitle mx-auto">Our community's top picks — tried, tested, and loved by foodies like you</p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="most-loved-grid">
           {FEATURED_DISHES.map((dish, i) => (
             <motion.div
               key={dish.name}
-              className="craving-card"
+              className="dish-card"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
-              style={{ padding: '16px 12px', minWidth: 'auto' }}
             >
-              <div className="craving-card-icon" style={{ fontSize: '2.5rem' }}>{dish.image}</div>
-              <h3 className="craving-card-label" style={{ fontSize: '0.82rem', marginBottom: 2 }}>{dish.name}</h3>
-              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.72rem', marginBottom: 6 }}>{dish.restaurant}</p>
-              <div className="flex items-center justify-center gap-2">
-                <span style={{ background: '#FF6B35', color: 'white', padding: '2px 8px', borderRadius: 999, fontSize: '0.68rem', fontWeight: 700 }}>⭐ {dish.rating}</span>
-                <span style={{ color: '#FF6B35', fontWeight: 700, fontSize: '0.85rem' }}>{dish.price}</span>
+              <img
+                src={dish.image}
+                alt={dish.name}
+                className="dish-card-image"
+                loading="lazy"
+                onError={(e) => {
+                  e.target.src = 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&h=200&fit=crop';
+                }}
+              />
+              <div className="dish-card-content">
+                <h3 className="dish-card-name">{dish.name}</h3>
+                <p className="dish-card-restaurant">{dish.restaurant}</p>
+                <div className="dish-card-footer">
+                  <span className="dish-card-rating">
+                    <span>&#11088;</span> {dish.rating}
+                  </span>
+                  <span className="dish-card-price">&#x20B9;{dish.price}</span>
+                </div>
               </div>
             </motion.div>
           ))}
@@ -432,6 +449,17 @@ const Home = () => {
         <div className="testimonial-inner">
           <h2 className="testimonial-heading">What Our Foodies Say</h2>
           <p className="testimonial-subtitle">Real reviews from real people who love Spin-to-Dine</p>
+          <div className="testimonial-underline" />
+
+          <div className="testimonial-stats-row">
+            {REVIEW_STATS.map(stat => (
+              <div key={stat.label} className="testimonial-stat">
+                <span className="testimonial-stat-value">{stat.value}</span>
+                <span className="testimonial-stat-label">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+
           <div className="testimonial-grid">
             {TESTIMONIALS.slice(0, 3).map((t, i) => (
               <motion.div
@@ -442,47 +470,86 @@ const Home = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.1 }}
               >
-                <div className="testimonial-quote">"</div>
-                <div className="testimonial-avatar">{t.avatar}</div>
+                <div className="testimonial-quote">{"\u201C"}</div>
+
+                {t.avatar.startsWith('http') ? (
+                  <>
+                    <img
+                      src={t.avatar}
+                      alt={t.name}
+                      className="reviewer-avatar"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    <div className="reviewer-avatar-fallback">
+                      {t.name.split(' ').map(n => n[0]).join('')}
+                    </div>
+                  </>
+                ) : (
+                  <div className="reviewer-avatar-fallback" style={{ display: 'flex' }}>
+                    {t.name.split(' ').map(n => n[0]).join('')}
+                  </div>
+                )}
+
                 <div className="testimonial-stars">
                   {Array.from({ length: 5 }).map((_, si) => (
-                    <span key={si} className={si < t.rating ? 'star-active' : 'star-inactive'}>★</span>
+                    <span key={si} className={si < t.rating ? 'star-active' : 'star-inactive'}>&#9733;</span>
                   ))}
                 </div>
-                <p className="testimonial-text">"{t.text}"</p>
+                <p className="testimonial-text">{t.text}</p>
                 <p className="testimonial-name">{t.name}</p>
+                <p className="testimonial-role">{t.role} &#10003;</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      <motion.section {...fadeUp} className="categories-section" style={{ marginBottom: '4rem' }}>
-        <div className="text-center mb-8">
-          <h2 className="section-title" style={{ color: '#ffffff', fontWeight: 700, fontSize: '2rem' }}>Latest Recipes</h2>
-          <p className="section-subtitle mx-auto">Quick and delicious recipes inspired by our top restaurants</p>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6">
+      <motion.section {...fadeUp} className="latest-recipes-section">
+        <h2 className="recipes-heading">Latest Recipes</h2>
+        <div className="recipes-underline" />
+        <p className="recipes-subtitle">Quick and delicious recipes inspired by our top restaurants</p>
+
+        <div className="recipes-grid">
           {RECIPES.map((recipe, i) => (
             <motion.div
               key={recipe.title}
+              className="recipe-card"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.1 }}
-              style={{ background: '#2d4a2d', borderRadius: '16px', overflow: 'hidden', minWidth: 'auto' }}
             >
-              <div style={{ height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '4rem', background: 'rgba(0,0,0,0.2)', width: '100%' }}>{recipe.image}</div>
-              <div style={{ padding: '20px', width: '100%' }}>
-                <h3 style={{ color: '#ffffff', fontWeight: 700, fontSize: '1rem', marginBottom: '0.75rem' }}>{recipe.title}</h3>
-                <div className="flex items-center gap-4" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.82rem' }}>
-                  <span>⏱ {recipe.time}</span>
-                  <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'rgba(255,255,255,0.2)' }} />
-                  <span>{recipe.difficulty}</span>
+              <div className="recipe-image-wrapper">
+                <img
+                  src={recipe.image}
+                  alt={recipe.title}
+                  className="recipe-image"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.target.src = 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=220&fit=crop';
+                  }}
+                />
+                <span className={`difficulty-badge ${recipe.difficulty.toLowerCase()}`}>
+                  {recipe.difficulty}
+                </span>
+                <span className="time-badge">&#x23F1; {recipe.time}</span>
+              </div>
+              <div className="recipe-content">
+                <h3 className="recipe-title">{recipe.title}</h3>
+                <div className="recipe-footer">
+                  <span className="recipe-meta">&#x23F1; {recipe.time} &bull; {recipe.difficulty}</span>
+                  <span className="recipe-view-link">View Recipe &#x2192;</span>
                 </div>
               </div>
             </motion.div>
           ))}
+        </div>
+
+        <div className="recipes-view-all">
+          <button className="view-all-recipes-btn">View All Recipes &#x2192;</button>
         </div>
       </motion.section>
 

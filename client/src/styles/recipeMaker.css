@@ -801,7 +801,7 @@
 
 /* ====== DARK MODE OVERRIDES ====== */
 body.dark-mode .recipe-input-panel {
-  background: rgba(255, 255, 255, 0.05);
+  background: #2d4a2d;
   border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -810,7 +810,7 @@ body.dark-mode .recipe-input-panel h1 {
 }
 
 body.dark-mode .tag-input-wrapper {
-  background: rgba(255, 255, 255, 0.06);
+  background: #1a3a1a;
   border-color: rgba(255, 255, 255, 0.12);
 }
 
@@ -819,12 +819,12 @@ body.dark-mode .tag-input {
 }
 
 body.dark-mode .ingredient-tag {
-  background: rgba(255, 255, 255, 0.1);
+  background: #1a3a1a;
   color: #FFFFFF;
 }
 
 body.dark-mode .pill-option {
-  background: rgba(255, 255, 255, 0.06);
+  background: #1a3a1a;
   border-color: rgba(255, 255, 255, 0.12);
   color: rgba(255, 255, 255, 0.75);
 }
@@ -835,18 +835,18 @@ body.dark-mode .pill-option:hover {
 }
 
 body.dark-mode .servings-input {
-  background: rgba(255, 255, 255, 0.06);
+  background: #1a3a1a;
   border-color: rgba(255, 255, 255, 0.12);
   color: #FFFFFF;
 }
 
 body.dark-mode .recipe-result-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: #2d4a2d;
   border-color: rgba(255, 255, 255, 0.1);
 }
 
 body.dark-mode .recipe-badge {
-  background: rgba(255, 255, 255, 0.08);
+  background: #1a3a1a;
   color: rgba(255, 255, 255, 0.85);
 }
 
@@ -863,7 +863,7 @@ body.dark-mode .recipe-tab.active {
 }
 
 body.dark-mode .ingredient-item {
-  background: rgba(255, 255, 255, 0.03);
+  background: #1a3a1a;
 }
 
 body.dark-mode .ingredient-item .ingredient-name {
@@ -871,7 +871,7 @@ body.dark-mode .ingredient-item .ingredient-name {
 }
 
 body.dark-mode .instruction-step {
-  background: rgba(255, 255, 255, 0.05);
+  background: #2d4a2d;
   border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -880,13 +880,13 @@ body.dark-mode .instruction-step .step-text {
 }
 
 body.dark-mode .timer-btn {
-  background: rgba(255, 255, 255, 0.06);
+  background: #1a3a1a;
   border-color: rgba(255, 255, 255, 0.15);
   color: rgba(255, 255, 255, 0.7);
 }
 
 body.dark-mode .nutrition-item {
-  background: rgba(255, 255, 255, 0.05);
+  background: #2d4a2d;
   border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -899,7 +899,7 @@ body.dark-mode .nutrition-item .nutrition-label {
 }
 
 body.dark-mode .tip-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: #2d4a2d;
   border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -908,7 +908,7 @@ body.dark-mode .tip-card .tip-text {
 }
 
 body.dark-mode .recipe-action-btn.secondary-action {
-  background: rgba(255, 255, 255, 0.06);
+  background: #1a3a1a;
   border-color: rgba(255, 255, 255, 0.15);
   color: rgba(255, 255, 255, 0.85);
 }
@@ -919,7 +919,7 @@ body.dark-mode .recipe-action-btn.secondary-action:hover {
 }
 
 body.dark-mode .saved-recipe-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: #2d4a2d;
   border-color: rgba(255, 255, 255, 0.1);
 }
 

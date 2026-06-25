@@ -17,6 +17,15 @@ const STATUS_OPTIONS = [
   { value: 'cancelled', label: 'Cancelled' }
 ];
 
+const STATUS_COLORS = {
+  placed: { bg: '#FF6B35', text: '#ffffff' },
+  confirmed: { bg: '#3B82F6', text: '#ffffff' },
+  preparing: { bg: '#F59E0B', text: '#ffffff' },
+  out_for_delivery: { bg: '#8B5CF6', text: '#ffffff' },
+  delivered: { bg: '#10B981', text: '#ffffff' },
+  cancelled: { bg: '#EF4444', text: '#ffffff' }
+};
+
 const Orders = () => {
   const { isAuthenticated } = useAuth();
   const { addToast } = useToast();
@@ -70,14 +79,6 @@ const Orders = () => {
     }
   };
 
-  const getStatusColor = (status) => {
-    const colors = {
-      placed: '#FF6B35', confirmed: '#F97316', preparing: '#FFB347',
-      out_for_delivery: '#4CAF50', delivered: '#2E7D32', cancelled: '#EF5350'
-    };
-    return colors[status] || '#999';
-  };
-
   const getStatusStep = (status) => ORDER_STEPS.indexOf(status);
 
   const formatDate = (dateString) => {
@@ -92,12 +93,21 @@ const Orders = () => {
     fetchOrders();
   };
 
+  const formatPaymentMethod = (method) => {
+    switch (method) {
+      case 'cash': return 'Cash on Delivery';
+      case 'card': return 'Card Payment';
+      case 'online': return 'Online Payment';
+      default: return method;
+    }
+  };
+
   if (loading) return <div className="loading-spinner">Loading orders...</div>;
 
   if (error) {
     return (
       <div className="orders-page">
-        <div className="error-message">{error}</div>
+        <div className="checkout-error">{error}</div>
         <button onClick={fetchOrders} className="btn-primary">Try Again</button>
       </div>
     );
@@ -105,88 +115,139 @@ const Orders = () => {
 
   return (
     <div className="orders-page">
-      <h1>My Orders</h1>
+      <h1 className="orders-title">My Orders</h1>
 
-      <div className="orders-filters">
-        <div className="filter-group">
-          <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="filter-select">
-            {STATUS_OPTIONS.map(s => (
-              <option key={s.value} value={s.value}>{s.label}</option>
-            ))}
-          </select>
-        </div>
+      <div className="orders-filter-bar">
+        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="filter-select">
+          {STATUS_OPTIONS.map(s => (
+            <option key={s.value} value={s.value}>{s.label}</option>
+          ))}
+        </select>
 
         <form onSubmit={handleSearch} className="order-search-form">
-          <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-            placeholder="Search orders..." className="form-input" />
-          <button type="submit" className="btn-secondary">Search</button>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder="Search orders..."
+            className="orders-search-input"
+          />
+          <button type="submit" className="orders-search-btn">Search</button>
         </form>
 
-        <div className="filter-group">
-          <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="filter-select" />
-          <span>to</span>
-          <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="filter-select" />
+        <div className="date-range-group">
+          <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="date-input" />
+          <span className="date-range-sep">to</span>
+          <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="date-input" />
         </div>
       </div>
 
       {orders.length === 0 ? (
-        <div className="no-orders">
-          <h2>No orders found</h2>
-          <p>Start exploring and order your favorite food!</p>
-          <Link to="/" className="btn-primary">Browse Restaurants</Link>
+        <div className="empty-orders">
+          <div className="empty-orders-icon">&#x1F4E6;</div>
+          <h2 className="empty-orders-title">No orders yet!</h2>
+          <p className="empty-orders-text">Start exploring restaurants and place your first order</p>
+          <Link to="/" className="explore-btn">Explore Restaurants</Link>
         </div>
       ) : (
         <div className="orders-list">
           {orders.map(order => {
             const currentStep = getStatusStep(order.deliveryStatus);
             const isCancelled = order.deliveryStatus === 'cancelled';
+            const statusColor = STATUS_COLORS[order.deliveryStatus] || { bg: '#999', text: '#fff' };
 
             return (
               <div key={order._id} className="order-card">
-                <div className="order-header">
+                {/* Card Header */}
+                <div className="order-card-header">
                   <div>
-                    <h3>{order.restaurantName}</h3>
+                    <h3 className="order-restaurant-name">{order.restaurantName}</h3>
                     <p className="order-date">{formatDate(order.orderedAt)}</p>
                   </div>
-                  <div className="order-status" style={{ backgroundColor: getStatusColor(order.deliveryStatus) }}>
-                    {order.deliveryStatus.replace(/_/g, ' ').toUpperCase()}
-                  </div>
-                </div>
-
-                {!isCancelled && (
-                  <div className="order-tracking">
-                    {ORDER_STEPS.map((step, idx) => (
-                      <div key={step} className={`tracking-step ${idx <= currentStep ? 'completed' : ''} ${idx === currentStep ? 'active' : ''}`}>
-                        <div className="tracking-dot">
-                          {idx < currentStep ? '✓' : idx + 1}
-                        </div>
-                        <span className="tracking-label">{step.replace(/_/g, ' ')}</span>
-                        {idx < ORDER_STEPS.length - 1 && <div className="tracking-line" />}
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="order-items">
-                  {order.items.map((item, index) => (
-                    <span key={index} className="order-item">{item.name} x {item.quantity}</span>
-                  ))}
-                </div>
-
-                <div className="order-footer">
-                  <span className="order-total">Total: ₹{order.totalAmount}</span>
-                  <span className="payment-method">
-                    Payment: {order.paymentMethod === 'cash' ? 'Cash on Delivery' : order.paymentMethod === 'card' ? 'Card' : 'Online'}
+                  <span
+                    className="status-badge"
+                    style={{ background: statusColor.bg, color: statusColor.text }}
+                  >
+                    {order.deliveryStatus === 'cancelled' && <>&#10005;</>}
+                    {order.deliveryStatus === 'delivered' && <>&#10003;</>}
+                    {!['cancelled', 'delivered'].includes(order.deliveryStatus) && <>&#9679;</>}
+                    {' '}{order.deliveryStatus.replace(/_/g, ' ').toUpperCase()}
                   </span>
                 </div>
 
-                <div className="order-address">📍 {order.deliveryAddress}</div>
-
-                {(order.deliveryStatus === 'placed' || order.deliveryStatus === 'confirmed') && (
-                  <button onClick={() => handleCancelOrder(order._id)} className="btn-secondary">
-                    Cancel Order
-                  </button>
+                {/* Progress Stepper */}
+                {!isCancelled && (
+                  <div className="stepper">
+                    <div className="stepper-track">
+                      <div
+                        className="stepper-progress"
+                        style={{ width: `${(currentStep / (ORDER_STEPS.length - 1)) * 100}%` }}
+                      />
+                    </div>
+                    {ORDER_STEPS.map((step, idx) => {
+                      const isCompleted = idx < currentStep;
+                      const isCurrent = idx === currentStep;
+                      return (
+                        <div
+                          key={step}
+                          className={`step ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}`}
+                        >
+                          <div className={`step-circle ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}`}>
+                            {isCompleted ? <>&#10003;</> : isCurrent ? <span className="step-pulse" /> : idx + 1}
+                          </div>
+                          <span className={`step-label ${isCompleted || isCurrent ? 'active' : ''}`}>
+                            {step.replace(/_/g, ' ')}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 )}
+
+                {isCancelled && (
+                  <div className="cancelled-label">This order has been cancelled</div>
+                )}
+
+                {/* Items */}
+                <div className="order-items-section">
+                  <div className="order-divider" />
+                  <p className="order-items-label">Items Ordered</p>
+                  {order.items.map((item, index) => (
+                    <div key={index} className="order-item-row">
+                      <span className="order-item-name">{item.name} &times; {item.quantity}</span>
+                      <span className="order-item-price">&#x20B9;{item.price * item.quantity}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Footer */}
+                <div className="order-divider" />
+                <div className="order-card-footer">
+                  <div className="order-footer-left">
+                    <div className="order-total-row">
+                      <span className="order-total-label">Total:</span>
+                      <span className="order-total-value">&#x20B9;{order.totalAmount}</span>
+                    </div>
+                    <div className="order-footer-badges">
+                      <span className="footer-badge">&#x1F4B3; {formatPaymentMethod(order.paymentMethod)}</span>
+                      {order.deliveryAddress && (
+                        <span className="footer-badge footer-address">&#x1F4CD; {order.deliveryAddress}</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="order-footer-actions">
+                    {(order.deliveryStatus === 'placed' || order.deliveryStatus === 'confirmed') && (
+                      <button onClick={() => handleCancelOrder(order._id)} className="cancel-order-btn">
+                        Cancel Order
+                      </button>
+                    )}
+                    {order.deliveryStatus === 'delivered' && (
+                      <button onClick={() => navigate('/')} className="reorder-btn">
+                        Reorder
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
             );
           })}

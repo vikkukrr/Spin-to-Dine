@@ -10,7 +10,6 @@ const Cart = () => {
   const navigate = useNavigate();
 
   const [paymentMethod, setPaymentMethod] = useState('cod');
-  const [deliveryAddress] = useState('123 Main Street, Downtown');
 
   const deliveryFee = restaurant?.deliveryFee || 40;
   const subtotal = getCartTotal();
@@ -31,8 +30,8 @@ const Cart = () => {
         <div className="empty-cart">
           <div className="empty-cart-icon">🛒</div>
           <h2>Your cart is empty</h2>
-          <p>Add some delicious food from our restaurants!</p>
-          <Link to="/" className="btn-primary">Browse Restaurants</Link>
+          <p>Add some delicious food to get started!</p>
+          <Link to="/" className="explore-btn">Explore Restaurants</Link>
         </div>
       </div>
     );
@@ -41,97 +40,98 @@ const Cart = () => {
   return (
     <div className="cart-page">
       <div className="cart-header">
-        <h1>Your Cart</h1>
-        {restaurant && (
-          <div className="cart-restaurant-badge">
-            <span className="badge-label">Ordering from</span>
-            <strong>{restaurant.name}</strong>
-          </div>
-        )}
+        <div className="cart-header-inner">
+          <h1>Your Cart</h1>
+          {restaurant && (
+            <p className="cart-ordering-from">
+              Ordering from <strong>{restaurant.name}</strong>
+            </p>
+          )}
+        </div>
       </div>
 
       <div className="cart-layout">
-        <div className="cart-left">
-          <div className="cart-items">
-            {cart.map((item, index) => (
-              <React.Fragment key={item._id}>
-                <CartItem item={item} />
-                {index < cart.length - 1 && <div className="cart-item-divider" />}
-              </React.Fragment>
-            ))}
-          </div>
+        <div className="cart-items-col">
+          {cart.map((item) => (
+            <CartItem key={item.cartId || item._id} item={item} />
+          ))}
         </div>
 
-        <div className="cart-right">
-          <div className="cart-summary">
+        <div className="cart-summary-col">
+          <div className="order-summary-card">
             <h3 className="summary-title">Order Summary</h3>
 
             {restaurant && (
-              <div className="summary-restaurant">
-                <span className="summary-label" style={{ textTransform: 'none', letterSpacing: 0 }}>Restaurant</span>
+              <div className="summary-row">
+                <span className="summary-label">Restaurant</span>
                 <span className="summary-value">{restaurant.name}</span>
               </div>
             )}
 
-            <div className="summary-rows">
-              <div className="summary-row">
-                <span>Item Subtotal</span>
-                <span>₹{subtotal}</span>
-              </div>
-              <div className="summary-row">
-                <span>Delivery Fee</span>
-                <span>₹{deliveryFee}</span>
-              </div>
-              <div className="summary-row">
-                <span>Taxes (GST 5%)</span>
-                <span>₹{tax}</span>
-              </div>
+            <div className="summary-divider" />
+
+            <div className="summary-row">
+              <span className="summary-label">Item Subtotal</span>
+              <span className="summary-value">₹{subtotal}</span>
+            </div>
+            <div className="summary-row">
+              <span className="summary-label">Delivery Fee</span>
+              <span className="summary-value">₹{deliveryFee}</span>
+            </div>
+            <div className="summary-row">
+              <span className="summary-label">Taxes (GST 5%)</span>
+              <span className="summary-value">₹{tax}</span>
             </div>
 
             <div className="summary-divider" />
 
             <div className="summary-row total">
-              <span>Total</span>
-              <span>₹{total}</span>
+              <span className="total-label">Total</span>
+              <span className="total-value">₹{total}</span>
             </div>
 
-            <div className="summary-section">
-              <label className="summary-label">Payment Method</label>
-              <div className="payment-options">
-                <label className={`payment-option-card ${paymentMethod === 'cod' ? 'selected' : ''}`}>
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="cod"
-                    checked={paymentMethod === 'cod'}
-                    onChange={() => setPaymentMethod('cod')}
-                  />
-                  <span className="payment-option-label">Cash on Delivery</span>
-                </label>
-                <label className={`payment-option-card ${paymentMethod === 'online' ? 'selected' : ''}`}>
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="online"
-                    checked={paymentMethod === 'online'}
-                    onChange={() => setPaymentMethod('online')}
-                  />
-                  <span className="payment-option-label">Online Payment</span>
-                </label>
-              </div>
+            <div className="payment-section">
+              <h4 className="payment-section-title">Payment Method</h4>
+
+              <label className={`payment-option ${paymentMethod === 'cod' ? 'selected' : ''}`}>
+                <input
+                  type="radio"
+                  name="payment"
+                  value="cod"
+                  checked={paymentMethod === 'cod'}
+                  onChange={() => setPaymentMethod('cod')}
+                />
+                <span>💵 Cash on Delivery</span>
+              </label>
+
+              <label className={`payment-option ${paymentMethod === 'card' ? 'selected' : ''}`}>
+                <input
+                  type="radio"
+                  name="payment"
+                  value="card"
+                  checked={paymentMethod === 'card'}
+                  onChange={() => setPaymentMethod('card')}
+                />
+                <span>💳 Card Payment</span>
+              </label>
+
+              <label className={`payment-option ${paymentMethod === 'upi' ? 'selected' : ''}`}>
+                <input
+                  type="radio"
+                  name="payment"
+                  value="upi"
+                  checked={paymentMethod === 'upi'}
+                  onChange={() => setPaymentMethod('upi')}
+                />
+                <span>📱 UPI / Net Banking</span>
+              </label>
             </div>
 
-            <div className="summary-section">
-              <div className="delivery-address-header">
-                <label className="summary-label">Delivery Address</label>
-                <button className="edit-address-btn" title="Edit address">✎</button>
-              </div>
-              <p className="delivery-address-text">{deliveryAddress}</p>
-            </div>
-
-            <button onClick={handleCheckout} className="place-order-btn">
-              Place Order • ₹{total}
+            <button onClick={handleCheckout} className="checkout-btn">
+              Proceed to Checkout → ₹{total}
             </button>
+
+            <p className="secure-checkout">🔒 Secure checkout</p>
 
             <button onClick={clearCart} className="clear-cart-btn">
               Clear Cart
