@@ -81,16 +81,28 @@ if (fs.existsSync(clientBuild)) {
 
 app.use(errorMiddleware);
 
+let dbReady = false;
+
+const dbCheckMiddleware = (req, res, next) => {
+  if (req.path === '/api/health' || req.path === '/api/test-db') return next();
+  if (!dbReady) {
+    return res.status(503).json({ message: 'Database connecting, please wait...' });
+  }
+  next();
+};
+
+app.use(dbCheckMiddleware);
+
 const PORT = process.env.PORT || 5000;
 
-connectDB().then(() => {
-  console.log('Database connected, ready to handle requests');
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+  connectDB().then(() => {
+    dbReady = true;
+    console.log('Database connected, ready to handle requests');
+  }).catch(err => {
+    console.error('Failed to connect database:', err.message);
   });
-}).catch(err => {
-  console.error('Failed to connect database:', err.message);
-  process.exit(1);
 });
 
 module.exports = app;
