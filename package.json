@@ -4,12 +4,15 @@
   "description": "Spin-to-Dine - Gamified Food Recommendation System",
   "scripts": {
     "install:all": "cd server && npm install && cd ../client && npm install",
-    "start": "cd server && npm start",
-    "start:server": "cd server && npm start",
+    "start": "node server/server.js",
+    "start:server": "node server/server.js",
     "start:client": "cd client && npm start",
     "dev:server": "cd server && npx nodemon server.js",
-    "build": "cd client && npm run build",
+    "build": "npm install --prefix server && npm install --prefix client && npm run build --prefix client",
     "seed": "cd server && node seed.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "devDependencies": {
     "playwright": "^1.61.0"
