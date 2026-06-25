@@ -47,9 +47,10 @@ const Register = () => {
   });
 
   return (
-    <div className="auth-page dark-page">
+    <div className="auth-page">
+      <div className="auth-left">
       <motion.div
-        className="auth-container"
+        className="auth-card"
         initial={{ opacity: 0, y: 30, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
@@ -83,7 +84,7 @@ const Register = () => {
           </motion.div>
         )}
 
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form onSubmit={handleSubmit}>
           {step === 1 && (
             <motion.div
               key="step1"
@@ -96,7 +97,7 @@ const Register = () => {
                 <label htmlFor="name">Full Name</label>
                 <div className="auth-input-icon">
                   <span className="input-icon">👤</span>
-                  <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required className="form-input" placeholder="John Doe" autoFocus />
+                  <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required placeholder="John Doe" autoFocus />
                 </div>
               </div>
 
@@ -104,7 +105,7 @@ const Register = () => {
                 <label htmlFor="email">Email</label>
                 <div className="auth-input-icon">
                   <span className="input-icon">✉️</span>
-                  <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required className="form-input" placeholder="you@example.com" />
+                  <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required placeholder="you@example.com" />
                 </div>
               </div>
 
@@ -112,7 +113,7 @@ const Register = () => {
                 <label htmlFor="password">Password</label>
                 <div className="auth-input-icon">
                   <span className="input-icon">🔒</span>
-                  <input type={showPassword ? 'text' : 'password'} id="password" name="password" value={formData.password} onChange={handleChange} required minLength={6} className="form-input" placeholder="Minimum 6 characters" />
+                  <input type={showPassword ? 'text' : 'password'} id="password" name="password" value={formData.password} onChange={handleChange} required minLength={6} placeholder="Minimum 6 characters" />
                   <button
                     type="button"
                     className="password-toggle-btn"
@@ -137,16 +138,16 @@ const Register = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.35 }}
               >
-                <motion.button
-                  type="button"
-                  className="btn-primary btn-full"
-                  onClick={nextStep}
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.98 }}
-                  style={{ marginTop: 8 }}
-                >
-                  Continue →
-                </motion.button>
+                  <motion.button
+                    type="button"
+                    className="auth-btn"
+                    onClick={nextStep}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    style={{ marginTop: 8 }}
+                  >
+                    Continue →
+                  </motion.button>
               </motion.div>
 
             </motion.div>
@@ -166,7 +167,7 @@ const Register = () => {
                   <span className="input-icon input-icon-textarea">📍</span>
                   <textarea
                     id="address" name="address" value={formData.address}
-                    onChange={handleChange} className="form-input" rows={3}
+                    onChange={handleChange} rows={3}
                     placeholder="Street, city, zip code"
                     autoFocus
                   />
@@ -185,9 +186,9 @@ const Register = () => {
                 </motion.button>
                 <motion.button
                   type="submit"
-                  className="btn-primary"
+                  className="auth-btn"
                   disabled={loading}
-                  whileHover={{ scale: loading ? 1 : 1.01 }}
+                  whileHover={{ scale: loading ? 1 : 1.02 }}
                   whileTap={{ scale: loading ? 1 : 0.98 }}
                 >
                   {loading ? (
@@ -211,8 +212,16 @@ const Register = () => {
           Already have an account? <Link to="/login">Login</Link>
         </motion.p>
       </motion.div>
+      </div>
 
-
+      <div className="auth-right">
+        <div className="auth-right-overlay" />
+        <div className="auth-right-content">
+          <span className="auth-right-emoji">🍔</span>
+          <h2>Discover Your Next Favorite Meal</h2>
+          <p>Spin the wheel, explore restaurants, and earn rewards with every order!</p>
+        </div>
+      </div>
     </div>
   );
 };

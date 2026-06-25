@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import api from '../services/api';
 
 const Login = () => {
   const { login, error } = useAuth();
@@ -31,105 +30,83 @@ const Login = () => {
   };
 
   return (
-    <div className="auth-page dark-page">
-      <motion.div
-        className="auth-container"
-        initial={{ opacity: 0, y: 30, scale: 0.97 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.4, ease: 'easeOut' }}
-      >
+    <div className="auth-page">
+      <div className="auth-left">
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.4 }}
+          className="auth-card"
+          initial={{ opacity: 0, y: 30, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
         >
-          <h1>Welcome Back</h1>
-          <p className="auth-subtitle">Log in to continue your food journey</p>
-        </motion.div>
-
-        {error && (
-          <motion.div
-            className="error-message"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            transition={{ duration: 0.3 }}
-          >
-            {error}
-          </motion.div>
-        )}
-
-        <form onSubmit={handleSubmit} className="auth-form">
-          <motion.div
-            className="form-group"
-            initial={{ opacity: 0, x: -15 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.15, duration: 0.35 }}
-          >
-            <label htmlFor="email">Email</label>
-            <div className="auth-input-icon">
-              <span className="input-icon">✉️</span>
-              <input
-                type="email" id="email" name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="form-input"
-                placeholder="you@example.com"
-                autoFocus
-              />
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="form-group"
-            initial={{ opacity: 0, x: -15 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2, duration: 0.35 }}
-          >
-            <label htmlFor="password">Password</label>
-            <div className="auth-input-icon">
-              <span className="input-icon">🔒</span>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                id="password" name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                className="form-input"
-                placeholder="Enter your password"
-              />
-              <button
-                type="button"
-                className="password-toggle-btn"
-                onClick={() => setShowPassword(!showPassword)}
-                tabIndex={-1}
-              >
-                {showPassword ? '🙈' : '👁️'}
-              </button>
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="form-group forgot-password-group"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.25, duration: 0.35 }}
-          >
-            <Link to="/forgot-password" className="forgot-link">Forgot Password?</Link>
-          </motion.div>
-
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.35 }}
+            transition={{ delay: 0.1, duration: 0.4 }}
           >
+            <h1>Welcome Back</h1>
+            <p className="auth-subtitle">Log in to continue your food journey</p>
+          </motion.div>
+
+          {error && (
+            <motion.div
+              className="error-message"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              transition={{ duration: 0.3 }}
+            >
+              {error}
+            </motion.div>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <div className="auth-input-icon">
+                <span className="input-icon">✉️</span>
+                <input
+                  type="email" id="email" name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="you@example.com"
+                  autoFocus
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <div className="auth-input-icon">
+                <span className="input-icon">🔒</span>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  id="password" name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter your password"
+                />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? '🙈' : '👁️'}
+                </button>
+              </div>
+            </div>
+
+            <div className="forgot-password-group">
+              <Link to="/forgot-password" className="forgot-link">Forgot Password?</Link>
+            </div>
+
             <motion.button
               type="submit"
-              className="btn-primary btn-full"
+              className="auth-btn"
               disabled={loading}
-              whileHover={{ scale: loading ? 1 : 1.01 }}
+              whileHover={{ scale: loading ? 1 : 1.02 }}
               whileTap={{ scale: loading ? 1 : 0.98 }}
-
             >
               {loading ? (
                 <span className="btn-loading">
@@ -137,34 +114,27 @@ const Login = () => {
                 </span>
               ) : 'Login'}
             </motion.button>
-          </motion.div>
-        </form>
+          </form>
 
-        <motion.div
-          className="auth-divider"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.35, duration: 0.35 }}
-        >
-          <span>or continue with</span>
-        </motion.div>
+          <div className="auth-divider">
+            <span>or continue with</span>
+          </div>
 
-        <motion.div
-          className="auth-social"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.35 }}
-        >
           <button
             onClick={async () => {
               setSocialLoading(true);
               try {
-                const res = await api.post('/social/google', {
-                  email: 'google_user_' + Date.now() + '@example.com',
-                  name: 'Google User',
-                  googleId: 'google_' + Date.now()
+                const res = await fetch('/api/social/google', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    email: 'google_user_' + Date.now() + '@example.com',
+                    name: 'Google User',
+                    googleId: 'google_' + Date.now()
+                  })
                 });
-                localStorage.setItem('token', res.data.token);
+                const data = await res.json();
+                localStorage.setItem('token', data.token);
                 addToast('Logged in with Google!', 'success');
                 window.location.href = '/';
               } catch {
@@ -173,7 +143,7 @@ const Login = () => {
                 setSocialLoading(false);
               }
             }}
-            className="btn-google"
+            className="google-btn"
             disabled={socialLoading}
           >
             {socialLoading ? 'Connecting...' : (
@@ -183,19 +153,21 @@ const Login = () => {
               </>
             )}
           </button>
+
+          <p className="auth-switch">
+            Don't have an account? <Link to="/register">Register</Link>
+          </p>
         </motion.div>
+      </div>
 
-        <motion.p
-          className="auth-switch"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.45, duration: 0.35 }}
-        >
-          Don't have an account? <Link to="/register">Register</Link>
-        </motion.p>
-      </motion.div>
-
-
+      <div className="auth-right">
+        <div className="auth-right-overlay" />
+        <div className="auth-right-content">
+          <span className="auth-right-emoji">🍔</span>
+          <h2>Discover Your Next Favorite Meal</h2>
+          <p>Spin the wheel, explore restaurants, and earn rewards with every order!</p>
+        </div>
+      </div>
     </div>
   );
 };
