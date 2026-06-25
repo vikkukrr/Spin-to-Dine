@@ -31,13 +31,12 @@ const Login = () => {
 
   return (
     <div className="auth-page">
-      <div className="auth-left">
-        <motion.div
-          className="auth-card"
-          initial={{ opacity: 0, y: 30, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
-        >
+      <motion.div
+        className="auth-card"
+        initial={{ opacity: 0, y: 30, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+      >
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -157,17 +156,7 @@ const Login = () => {
           <p className="auth-switch">
             Don't have an account? <Link to="/register">Register</Link>
           </p>
-        </motion.div>
-      </div>
-
-      <div className="auth-right">
-        <div className="auth-right-overlay" />
-        <div className="auth-right-content">
-          <span className="auth-right-emoji">🍔</span>
-          <h2>Discover Your Next Favorite Meal</h2>
-          <p>Spin the wheel, explore restaurants, and earn rewards with every order!</p>
-        </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
