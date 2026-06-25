@@ -78,17 +78,17 @@ const Leaderboard = () => {
 
   return (
     <div className="leaderboard-page">
-      <h1>Leaderboard</h1>
-      <p className="leaderboard-subtitle">Our finest food enthusiasts — where every meal tells a story</p>
+      <h1 className="leaderboard-title">Leaderboard</h1>
+      <p className="leaderboard-subtitle-text">Our finest food enthusiasts — where every meal tells a story</p>
 
-      <div className="leaderboard-tabs">
+      <div className="leaderboard-tabs" style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '32px' }}>
         {[
           { value: 'points', label: 'Points' },
           { value: 'spins', label: 'Spins' },
           { value: 'streak', label: 'Streak' }
         ].map(tab => (
           <button key={tab.value}
-            className={`leaderboard-tab ${type === tab.value ? 'active' : ''}`}
+            className={`tab-btn ${type === tab.value ? 'active' : ''}`}
             onClick={() => setType(tab.value)}>
             {tab.label}
           </button>
@@ -100,20 +100,20 @@ const Leaderboard = () => {
       ) : (
         <div className="leaderboard-list">
           {leaderboard.map(entry => (
-            <div key={entry._id} className={`leaderboard-card ${getRankClass(entry.rank)}`}>
-              <div className="leaderboard-rank">
-                <span className="rank-number">{getMedal(entry.rank)}</span>
+            <div key={entry._id} className={`user-card rank-${entry.rank}`}>
+              <div className={entry.rank <= 3 ? 'rank-medal' : 'rank-number-text'}>
+                {getMedal(entry.rank)}
               </div>
-              <div className="leaderboard-avatar">
+              <div className="user-avatar">
                 {getAvatar(entry.name)}
               </div>
-              <div className="leaderboard-info">
-                <h3>{entry.name}</h3>
-                <div className="leaderboard-metrics">
-                  <span className="metric">⭐ {entry.loyaltyPoints} pts</span>
-                  <span className="metric">🎰 {entry.totalSpins} spins</span>
-                  <span className="metric">🔥 {entry.currentStreak} day streak</span>
-                  <span className="metric">🏅 {entry.badgesCount} badges</span>
+              <div className="user-info">
+                <div className="user-name">{entry.name}</div>
+                <div className="user-stats">
+                  <span className="stat">⭐ {entry.loyaltyPoints} pts</span>
+                  <span className="stat">🎰 {entry.totalSpins} spins</span>
+                  <span className="stat">🔥 {entry.currentStreak} day streak</span>
+                  <span className="stat">🏅 {entry.badgesCount} badges</span>
                 </div>
               </div>
             </div>

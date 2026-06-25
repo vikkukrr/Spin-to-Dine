@@ -69,18 +69,10 @@ const Home = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [stickyFilter, setStickyFilter] = useState(false);
-  const [testimonialIdx, setTestimonialIdx] = useState(0);
   const [currentImage, setCurrentImage] = useState(0);
   const searchTimeout = useRef(null);
   const filterRef = useRef(null);
   const heroRef = useRef(null);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTestimonialIdx(i => (i + 1) % TESTIMONIALS.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -170,7 +162,7 @@ const Home = () => {
   }).length;
 
   return (
-    <div>
+    <div style={{ overflowX: 'hidden', width: '100%' }}>
       <section className="hero-section" ref={heroRef}>
         <div className="hero-carousel">
           {HERO_IMAGES.map((img, i) => (
@@ -279,7 +271,7 @@ const Home = () => {
 
       <motion.section {...fadeUp} className="categories-section">
         <div className="categories-header">
-          <h2>What are you craving?</h2>
+          <h2 style={{ color: '#ffffff', fontSize: '1.8rem', fontWeight: 700 }}>What are you craving?</h2>
         </div>
         <div className="categories-scroll">
           {['🍕', '🍔', '🍜', '🍰', '☕', '🥗'].map((icon, i) => (
@@ -368,7 +360,7 @@ const Home = () => {
       <section className="restaurants-section" id="restaurants">
         <div className="restaurants-header">
           <div>
-            <h2>Restaurants Near You</h2>
+            <h2 style={{ color: '#ffffff' }}>Restaurants Near You</h2>
             {total > 0 && <span className="restaurants-count">{total} restaurants</span>}
           </div>
           <div className="restaurants-header-actions">
@@ -436,77 +428,53 @@ const Home = () => {
         </div>
       </motion.section>
 
-      <motion.section {...fadeUp} className="categories-section" style={{ marginBottom: '4rem' }}>
-        <div className="text-center mb-8">
-          <h2 className="section-title">What Our Foodies Say</h2>
-          <p className="section-subtitle mx-auto">Real reviews from real people who love Spin-to-Dine</p>
-        </div>
-        <div className="relative" style={{ maxWidth: '600px', margin: '0 auto' }}>
-          <motion.div
-            key={testimonialIdx}
-            style={{
-              background: 'rgba(255,255,255,0.08)',
-              border: '1px solid rgba(255,255,255,0.15)',
-              borderRadius: '20px',
-              padding: '2rem',
-              textAlign: 'center',
-              color: 'white'
-            }}
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -40 }}
-            transition={{ duration: 0.4 }}
-          >
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>{TESTIMONIALS[testimonialIdx].avatar}</div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '4px', marginBottom: '1rem' }}>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <span key={i} style={{ color: i < TESTIMONIALS[testimonialIdx].rating ? '#FFD700' : 'rgba(255,255,255,0.2)', fontSize: '1.3rem' }}>★</span>
-              ))}
-            </div>
-            <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1rem', marginBottom: '1rem', fontStyle: 'italic', lineHeight: 1.6 }}>
-              "{TESTIMONIALS[testimonialIdx].text}"
-            </p>
-            <p style={{ color: '#FF6B35', fontWeight: 600 }}>{TESTIMONIALS[testimonialIdx].name}</p>
-          </motion.div>
-          <div className="flex justify-center gap-2 mt-5">
-            {TESTIMONIALS.map((_, i) => (
-              <button
+      <section className="testimonial-section">
+        <div className="testimonial-inner">
+          <h2 className="testimonial-heading">What Our Foodies Say</h2>
+          <p className="testimonial-subtitle">Real reviews from real people who love Spin-to-Dine</p>
+          <div className="testimonial-grid">
+            {TESTIMONIALS.slice(0, 3).map((t, i) => (
+              <motion.div
                 key={i}
-                style={{
-                  width: i === testimonialIdx ? '24px' : '10px',
-                  height: '10px',
-                  borderRadius: '999px',
-                  border: 'none',
-                  background: i === testimonialIdx ? '#FF6B35' : 'rgba(255,255,255,0.2)',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s'
-                }}
-                onClick={() => setTestimonialIdx(i)}
-              />
+                className="testimonial-card"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+              >
+                <div className="testimonial-quote">"</div>
+                <div className="testimonial-avatar">{t.avatar}</div>
+                <div className="testimonial-stars">
+                  {Array.from({ length: 5 }).map((_, si) => (
+                    <span key={si} className={si < t.rating ? 'star-active' : 'star-inactive'}>★</span>
+                  ))}
+                </div>
+                <p className="testimonial-text">"{t.text}"</p>
+                <p className="testimonial-name">{t.name}</p>
+              </motion.div>
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
       <motion.section {...fadeUp} className="categories-section" style={{ marginBottom: '4rem' }}>
         <div className="text-center mb-8">
-          <h2 className="section-title">Latest Recipes</h2>
+          <h2 className="section-title" style={{ color: '#ffffff', fontWeight: 700, fontSize: '2rem' }}>Latest Recipes</h2>
           <p className="section-subtitle mx-auto">Quick and delicious recipes inspired by our top restaurants</p>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {RECIPES.map((recipe, i) => (
             <motion.div
               key={recipe.title}
-              className="craving-card"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.1 }}
-              style={{ padding: 0, overflow: 'hidden', minWidth: 'auto' }}
+              style={{ background: '#2d4a2d', borderRadius: '16px', overflow: 'hidden', minWidth: 'auto' }}
             >
               <div style={{ height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '4rem', background: 'rgba(0,0,0,0.2)', width: '100%' }}>{recipe.image}</div>
               <div style={{ padding: '20px', width: '100%' }}>
-                <h3 style={{ color: '#FF6B35', fontWeight: 700, fontSize: '1rem', marginBottom: '0.75rem' }}>{recipe.title}</h3>
+                <h3 style={{ color: '#ffffff', fontWeight: 700, fontSize: '1rem', marginBottom: '0.75rem' }}>{recipe.title}</h3>
                 <div className="flex items-center gap-4" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.82rem' }}>
                   <span>⏱ {recipe.time}</span>
                   <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'rgba(255,255,255,0.2)' }} />
@@ -524,7 +492,9 @@ const Home = () => {
           borderRadius: '24px',
           padding: '3rem 2rem',
           textAlign: 'center',
-          color: 'white'
+          color: 'white',
+          maxWidth: '600px',
+          margin: '0 auto'
         }}>
           <motion.div initial={{ scale: 0.8, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
             <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>✉️</div>
@@ -536,7 +506,7 @@ const Home = () => {
                 padding: '14px 20px',
                 borderRadius: '12px',
                 border: '1px solid rgba(255,255,255,0.2)',
-                background: 'rgba(0,0,0,0.3)',
+                background: '#1a3a1a',
                 color: 'white',
                 fontSize: '0.9rem',
                 outline: 'none',
@@ -559,44 +529,44 @@ const Home = () => {
         </div>
       </motion.section>
 
-      <footer style={{ background: '#0f1f0f', color: 'white' }}>
+      <footer style={{ background: '#0f1f0f', color: 'white', width: '100%' }}>
         <div className="max-w-7xl mx-auto px-5 py-12">
           <div className="grid md:grid-cols-4 gap-8 mb-10">
-            <div className="md:col-span-1">
-              <div className="flex items-center gap-2 text-xl font-bold mb-4">
+            <div>
+              <div className="flex items-center gap-2 text-xl font-bold mb-4" style={{ color: '#ffffff' }}>
                 <span>🍔</span>
                 <span>Spin-to-Dine</span>
               </div>
-              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.88rem', lineHeight: 1.7 }}>Discover delicious food near you. Spin, order, and earn rewards with every meal.</p>
+              <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.88rem', lineHeight: 1.7 }}>Discover delicious food near you. Spin, order, and earn rewards with every meal.</p>
             </div>
             <div>
-              <h4 style={{ fontWeight: 600, marginBottom: '1rem', color: '#ffffff' }}>Quick Links</h4>
+              <h4 style={{ fontWeight: 700, marginBottom: '1rem', color: '#ffffff' }}>Quick Links</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.88rem' }}>
-                <Link to="/" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>Home</Link>
-                <Link to="/spin" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>Spin Wheel</Link>
-                <Link to="/leaderboard" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>Leaderboard</Link>
-                <Link to="/menu" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>Full Menu</Link>
+                <Link to="/" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Home</Link>
+                <Link to="/spin" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Spin Wheel</Link>
+                <Link to="/leaderboard" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Leaderboard</Link>
+                <Link to="/menu" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Full Menu</Link>
               </div>
             </div>
             <div>
-              <h4 style={{ fontWeight: 600, marginBottom: '1rem', color: '#ffffff' }}>Account</h4>
+              <h4 style={{ fontWeight: 700, marginBottom: '1rem', color: '#ffffff' }}>Account</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.88rem' }}>
-                <Link to="/profile" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>My Profile</Link>
-                <Link to="/orders" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>My Orders</Link>
-                <Link to="/favorites" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>Favorites</Link>
-                <Link to="/cart" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>Cart</Link>
+                <Link to="/profile" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>My Profile</Link>
+                <Link to="/orders" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>My Orders</Link>
+                <Link to="/favorites" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Favorites</Link>
+                <Link to="/cart" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Cart</Link>
               </div>
             </div>
             <div>
-              <h4 style={{ fontWeight: 600, marginBottom: '1rem', color: '#ffffff' }}>Contact</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.88rem', color: 'rgba(255,255,255,0.6)' }}>
+              <h4 style={{ fontWeight: 700, marginBottom: '1rem', color: '#ffffff' }}>Contact</h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.88rem', color: 'rgba(255,255,255,0.8)' }}>
                 <span>📧 hello@spintodine.com</span>
                 <span>📞 +1 234 567 890</span>
                 <span>📍 123 Foodie Lane, NYC</span>
               </div>
             </div>
           </div>
-          <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1.5rem', textAlign: 'center', fontSize: '0.82rem', color: 'rgba(255,255,255,0.4)' }}>
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1.5rem', textAlign: 'center', fontSize: '0.82rem', color: 'rgba(255,255,255,0.5)' }}>
             <p>© {new Date().getFullYear()} Spin-to-Dine. All rights reserved. Made with ❤️ for food lovers.</p>
           </div>
         </div>

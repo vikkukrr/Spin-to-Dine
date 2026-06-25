@@ -31,7 +31,7 @@ const Login = () => {
   };
 
   return (
-    <div className="auth-page">
+    <div className="auth-page dark-page">
       <motion.div
         className="auth-container"
         initial={{ opacity: 0, y: 30, scale: 0.97 }}

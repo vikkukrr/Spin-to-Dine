@@ -43,7 +43,7 @@ const SpinHistory = () => {
 
   return (
     <div className="spin-history-page">
-      <h1>Spin History</h1>
+      <h1 className="spin-history-title">Spin History</h1>
       {history.length === 0 ? (
         <div className="empty-state">
           <h2>No spins yet! 🎰</h2>
@@ -53,34 +53,32 @@ const SpinHistory = () => {
       ) : (
         <div className="history-list">
           {history.map((entry) => (
-            <div key={entry._id} className="history-card">
-              <div className="history-header">
-                <span className="history-date">{formatDate(entry.spinDate)}</span>
-                <span className={`history-status ${entry.accepted ? 'accepted' : 'skipped'}`}>
-                  {entry.accepted ? 'Accepted' : 'Skipped'}
-                </span>
-              </div>
-              <div className="history-body">
+            <div key={entry._id} className="spin-history-card">
+              <div className="spin-history-card-inner">
                 {entry.suggestedDish && (
                   <>
                     <img
                       src={entry.suggestedDish.imageUrl || 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=120&h=120&fit=crop'}
                       alt={entry.suggestedDish.name}
-                      className="history-dish-img"
+                      className="dish-image"
                       onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=120&h=120&fit=crop'; }}
                     />
-                    <div className="history-dish-info">
+                    <div className="dish-info">
                       <h3>{entry.suggestedDish.name}</h3>
-                      <p className="history-price">₹{entry.suggestedDish.price}</p>
+                      {entry.restaurantId && <p className="restaurant-name">from {entry.restaurantId.name}</p>}
+                      <p className="dish-price">₹{entry.suggestedDish.price}</p>
                     </div>
                   </>
                 )}
-                {entry.restaurantId && (
-                  <p className="history-restaurant">from {entry.restaurantId.name}</p>
-                )}
+                <div className="history-right">
+                  <span className="history-date">{formatDate(entry.spinDate)}</span>
+                  <span className={`history-status-badge ${entry.accepted ? 'accepted' : 'skipped'}`}>
+                    {entry.accepted ? 'Accepted' : 'Skipped'}
+                  </span>
+                </div>
               </div>
               {entry.score !== undefined && (
-                <div className="history-score">
+                <div className="match-score">
                   Match Score: {Math.round(entry.score * 100)}%
                 </div>
               )}

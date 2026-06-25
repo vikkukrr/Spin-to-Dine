@@ -22,7 +22,9 @@ const RestaurantCard = ({ restaurant }) => {
       <div className="restaurant-card-image">
         {!imgLoaded && <div className="card-image-placeholder" />}
         <img
-          src={imageUrl || ''}
+          src={restaurant.imageUrl?.startsWith('http')
+            ? restaurant.imageUrl
+            : `https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=250&fit=crop`}
           alt={name}
           className={`card-image ${imgLoaded ? 'loaded' : ''}`}
           onLoad={() => setImgLoaded(true)}

@@ -4,10 +4,11 @@
   "description": "Spin-to-Dine - Gamified Food Recommendation System",
   "scripts": {
     "install:all": "cd server && npm install && cd ../client && npm install",
+    "start": "cd server && npm start",
     "start:server": "cd server && npm start",
     "start:client": "cd client && npm start",
     "dev:server": "cd server && npx nodemon server.js",
-    "build:client": "cd client && npm run build",
+    "build": "cd client && npm run build",
     "seed": "cd server && node seed.js"
   },
   "devDependencies": {

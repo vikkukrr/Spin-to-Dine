@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 
 let mongoMemServer = null;
@@ -27,9 +26,8 @@ const seedData = async () => {
 
   await Badge.insertMany(badges);
 
-  const salt = await bcrypt.genSalt(10);
-  await User.create({ name: 'Test User', email: 'test@example.com', password: await bcrypt.hash('password123', salt) });
-  await User.create({ name: 'Admin', email: 'admin@example.com', password: await bcrypt.hash('admin123', salt), isAdmin: true });
+  await User.create({ name: 'Test User', email: 'test@example.com', password: 'password123' });
+  await User.create({ name: 'Admin', email: 'admin@example.com', password: 'admin123', isAdmin: true });
 
   const restaurants = [
     { name: 'Biryani House', location: 'Downtown', rating: 4.5, ratingCount: 230, cuisines: ['Biryani', 'North Indian', 'Mughlai'], deliveryTime: '30-40 min', deliveryFee: 40, minOrder: 200, vegOnly: false, isOpen: true, imageUrl: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=400' },
@@ -89,25 +87,25 @@ const seedData = async () => {
 };
 
 const connectDB = async () => {
-  const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+  const mongoUri = (process.env.MONGODB_URI || process.env.MONGO_URI || '').trim();
 
-  if (mongoUri && typeof mongoUri === 'string' && mongoUri.trim()) {
+  if (mongoUri) {
     try {
-      const conn = await mongoose.connect(mongoUri.trim(), {
-        serverSelectionTimeoutMS: 5000,
-        connectTimeoutMS: 5000,
+      const conn = await mongoose.connect(mongoUri, {
+        serverSelectionTimeoutMS: 10000,
+        socketTimeoutMS: 45000,
+        connectTimeoutMS: 10000,
+        maxPoolSize: 10,
       });
       console.log(`MongoDB Connected: ${conn.connection.host}`);
       process.env.USE_MEMORY_DB = '';
       return;
     } catch (error) {
       console.warn(`MongoDB connection failed: ${error.message}`);
-      console.log('Falling back to in-memory MongoDB...');
     }
-  } else {
-    console.log('MongoDB URI missing, using in-memory MongoDB...');
   }
 
+  console.log('Using in-memory MongoDB...');
   mongoMemServer = await MongoMemoryServer.create();
   const uri = mongoMemServer.getUri();
   await mongoose.connect(uri);

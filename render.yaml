@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: spin-to-dine
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install --prefix server && npm install --prefix client && npm run build --prefix client
+    startCommand: npm start --prefix server
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGO_URI
+        sync: false

@@ -1,9 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.NODE_ENV === 'production'
-    ? 'https://spin-to-dine.onrender.com/api'
-    : '/api',
+  baseURL: '/api',
   headers: {
     'Content-Type': 'application/json'
   }

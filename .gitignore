@@ -85,3 +85,7 @@ temp/
 # =========================
 *.tgz
 *.bak
+
+nul
+screenshots/
+take-screenshots.js

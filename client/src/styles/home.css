@@ -7,7 +7,7 @@
 .hero-section {
   position: relative;
   height: 85vh;
-  min-height: 600px;
+  min-height: 85vh;
   max-height: 900px;
   color: white;
   overflow: hidden;
@@ -347,14 +347,14 @@
 }
 
 .quick-stats {
-  width: 100%;
-  background: #1a3a1a;
   display: flex;
-  justify-content: center;
+  flex-direction: row;
   align-items: center;
-  gap: 24px;
-  padding: 16px 20px;
-  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+  padding: 12px 32px;
+  background: #1e3a1e;
 }
 
 .quick-stat {
@@ -419,9 +419,9 @@
 }
 
 .categories-section {
-  max-width: 1200px;
-  margin: 48px auto 0;
-  padding: 0 80px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 60px 64px;
 }
 
 .categories-header {
@@ -460,14 +460,15 @@ body.dark-mode .categories-header h2 {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  padding: 20px 28px;
+  padding: 16px 24px;
   background: #2d4a2d;
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 18px;
   cursor: pointer;
   transition: all 0.25s;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  min-width: 100px;
+  min-width: 80px;
+  min-height: 80px;
   flex-shrink: 0;
 }
 
@@ -478,7 +479,7 @@ body.dark-mode .categories-header h2 {
 }
 
 .craving-card-icon {
-  font-size: 2rem;
+  font-size: 32px;
   transition: transform 0.25s;
 }
 
@@ -487,7 +488,7 @@ body.dark-mode .categories-header h2 {
 }
 
 .craving-card-label {
-  font-size: 0.85rem;
+  font-size: 12px;
   font-weight: 600;
   color: #ffffff;
   white-space: nowrap;
@@ -1234,6 +1235,7 @@ body.dark-mode .page-num.active {
   .float-dish-icon { font-size: 1.5rem; }
   .float-dish-name { font-size: 0.75rem; }
   .float-dish-price { font-size: 0.82rem; }
+  .categories-section { padding: 40px 32px; }
 }
 
 @media (max-width: 1024px) {
@@ -1252,7 +1254,8 @@ body.dark-mode .page-num.active {
   .float-rating-text { font-size: 0.72rem; }
   .float-dish { display: none; }
   .float-delivery { bottom: 18%; right: 3%; padding: 10px 16px; font-size: 0.78rem; }
-  .categories-section { padding: 0 40px; }
+  .categories-section { padding: 0 32px; }
+  .restaurants-grid { grid-template-columns: repeat(2, 1fr); }
   .restaurants-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
@@ -1278,7 +1281,7 @@ body.dark-mode .page-num.active {
   .quick-stat-spin { width: 100%; grid-column: 1 / -1; justify-content: center; }
   .quick-stat-link { grid-column: 1 / -1; text-align: center; }
 
-  .categories-section { margin-top: 32px; padding: 0 20px; }
+  .categories-section { margin-top: 32px; padding: 0 16px; }
   .categories-header h2 { font-size: 1.4rem; }
   .craving-card { padding: 16px 20px; min-width: 80px; }
   .craving-card-icon { font-size: 1.5rem; }
@@ -1322,9 +1325,9 @@ body.dark-mode .page-num.active {
 
   .categories-section { margin-top: 24px; padding: 0 16px; }
   .categories-scroll { gap: 10px; }
-  .craving-card { padding: 12px 16px; min-width: 70px; border-radius: 14px; }
-  .craving-card-icon { font-size: 1.3rem; }
-  .craving-card-label { font-size: 0.7rem; }
+  .craving-card { padding: 12px 16px; min-width: 80px; border-radius: 14px; }
+  .craving-card-icon { font-size: 26px; }
+  .craving-card-label { font-size: 11px; }
 
   .restaurants-grid { gap: 12px; }
   .restaurant-card-image { height: 155px; }
